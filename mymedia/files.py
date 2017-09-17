@@ -5,8 +5,9 @@ from django import VERSION
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_permission_codename
+from django.utils.six.moves.urllib.parse import unquote
+from django.utils.timezone import now
 import traceback
-from urllib import unquote as UQ
 import re
 
 from logging import getLogger
@@ -31,10 +32,12 @@ class ModelFieldPath(object):
                 instance._meta.model_name, self.fieldname, name)
             return res
         except:
+            print(traceback.format_exc())
             logger.error(traceback.format_exc())
 
     def create_name(self, instance, filename):
-        return filename and u"{}{}".format(instance.id, filename)
+        id = instance.id or "t{:x}".format(round(now().timestamp()))
+        return filename and u"{}.{}".format(id, filename)
 
     @classmethod
     def get_base_url(cls, access, app_label, model_name, field_name):
@@ -43,11 +46,10 @@ class ModelFieldPath(object):
 
     @classmethod
     def get_filepath(cls, access, app_label, model_name, field_name, name):
-        name = encoding.force_unicode(name)
+        # name = encoding.force_unicode(name)
         ret = u'{}/{}'.format(
             cls.get_base_url(access, app_label, model_name, field_name), name)
-
-        return UQ(ret) if VERSION > (1, 10) else UQ(ret).decode('utf8')
+        return unquote(ret)
 
     @classmethod
     def get_protected_data(self, name, user, action='download'):
@@ -57,7 +59,7 @@ class ModelFieldPath(object):
         access, app_label, model_name, field_name, path = m and m.groups() or (None, None, None, None, None)    # NOQA
         ct = ContentType.objects.get(
             app_label=app_label, model=model_name)
-        model_class = ct and ct.ct.model_class()
+        model_class = ct and ct.model_class()
         query = Q(**{field_name: path}) | Q(**{field_name: name})
         instance = model_class.objects.filter(query).first()
         perm = get_permission_codename(action, model_class._meta)

@@ -5,7 +5,7 @@ from mimetypes import guess_type
 
 
 def download(request, name):
-    '''download file '''
+    '''download (protected) file '''
     value = ModelFieldPath.get_protected_data(name, request.user, 'download')
     if not value:
         return HttpResponseForbidden()
