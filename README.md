@@ -5,7 +5,7 @@
 
 ## Protected Media
 
-- If `name` starts with `'protected',  the data is published through `download` view.
+- If `name` starts with `protected',  the data is published through `download` view.
 - `download` view finds the model instance for the given name, and publishes it
    if requesing user has  `download` permission for this instance.
 
@@ -37,7 +37,7 @@ urlpatterns = [
 
 models.py:
 
-~~~~py
+~~~py
 # coding: utf-8
 from django.db import models
 from mymedia.files import ModelFieldPath
