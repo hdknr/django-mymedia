@@ -1,7 +1,5 @@
 # coding: utf-8
 from django.utils.deconstruct import deconstructible
-from django.utils import encoding
-from django import VERSION
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_permission_codename
@@ -32,7 +30,6 @@ class ModelFieldPath(object):
                 instance._meta.model_name, self.fieldname, name)
             return res
         except:
-            print(traceback.format_exc())
             logger.error(traceback.format_exc())
 
     def create_name(self, instance, filename):
@@ -46,7 +43,6 @@ class ModelFieldPath(object):
 
     @classmethod
     def get_filepath(cls, access, app_label, model_name, field_name, name):
-        # name = encoding.force_unicode(name)
         ret = u'{}/{}'.format(
             cls.get_base_url(access, app_label, model_name, field_name), name)
         return unquote(ret)
@@ -56,7 +52,7 @@ class ModelFieldPath(object):
         m = re.search(
             r'^(?P<access>[^/]+)/(?P<app_label>[^/]+)/(?P<model_name>[^/]+)/(?P<field_name>[^/]+)/(?P<path>.+)',    # NOQA
             name)
-        access, app_label, model_name, field_name, path = m and m.groups() or (None, None, None, None, None)    # NOQA
+        access, app_label, model_name, field_name, path = m and m.groups() or tuple([None] * 5)    # NOQA
         ct = ContentType.objects.get(
             app_label=app_label, model=model_name)
         model_class = ct and ct.model_class()
