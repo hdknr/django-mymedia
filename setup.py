@@ -1,6 +1,4 @@
 #! /usr/bin/env python
-from mymedia import __version__
-
 from setuptools import setup, find_packages
 from glob import glob
 
@@ -8,6 +6,10 @@ NAME = 'django-mymedia'
 DESCRIPTION = 'Protected Media File Management'
 URL = 'https://github.com/hdknr/' + NAME
 SCRIPTS = glob('scripts/*.py')
+PACKAGES = [
+    i for i in find_packages(exclude=['tests'])
+    if '.' not in i]
+VERSION = getattr(__import__(PACKAGES[0]),  '__version__')
 REQUIRES = [
     i.strip() for i in
     open('requirements/pypi.txt').readlines() if i[0] != '#']
@@ -36,11 +38,11 @@ setup(
     maintainer_email='gmail [at] hdknr.com',
     classifiers=CLASSIFIERS,
     name=NAME,
-    version=__version__,
+    version=VERSION,
     url=URL,
     description=DESCRIPTION,
     download_url=URL,
-    packages=find_packages(),
+    packages=PACKAGES,
     include_package_data=True,
     zip_safe=False,
     long_description=README,
