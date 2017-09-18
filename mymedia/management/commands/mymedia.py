@@ -22,7 +22,7 @@ def add_mediafile(ctx, path, user_id, public):
     ''' Add a MediaFile'''
     access = 'public' if public else 'protected'
     models.MediaFile(
-        data=File(open(path)),
+        data=File(open(path, 'rb')),
         access=access,
         owner=User.objects.filter(id=user_id).first()
     ).save()
