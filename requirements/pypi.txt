@@ -1,2 +1,7 @@
 django-storages
 boto3
+pillow
+djangorestframework
+djangorestframework-filters
+markdown
+django-filter

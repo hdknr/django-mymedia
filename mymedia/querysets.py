@@ -2,7 +2,7 @@
 from django.db import models
 from mimetypes import guess_type
 from PIL import Image, ExifTags
-from . import serializers
+from . import encoders
 
 
 class MediaTypeQuerySet(models.QuerySet):
@@ -11,6 +11,13 @@ class MediaTypeQuerySet(models.QuerySet):
         content_type, _x = guess_type(name)
         return content_type and \
             self.get_or_create(content_type=content_type)[0]
+
+
+class MediaFileQuerySet(models.QuerySet):
+
+    def filter_image(self, **kwargs):
+        return self.filter(
+            media_type__content_type__startswith='image/', **kwargs)
 
 
 class ImageMetaQuerySet(models.QuerySet):
@@ -31,7 +38,7 @@ class ImageMetaQuerySet(models.QuerySet):
 
             info = {'dpi': img.info.get('dpi', None), 'exif': exif}
             try:
-                info = serializers.BaseObjectEncoder.to_json(info, indent=2)
+                info = encoders.BaseObjectEncoder.to_json(info, indent=2)
             except:
                 info = '{}'
 

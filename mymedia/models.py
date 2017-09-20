@@ -27,6 +27,8 @@ class MediaFile(defs.MediaFile, methods.MediaFile):
     def __str__(self):
         return self.filename
 
+    objects = querysets.MediaFileQuerySet.as_manager()
+
 
 class ImageMeta(defs.ImageMeta):
     image = models.OneToOneField(MediaFile)
