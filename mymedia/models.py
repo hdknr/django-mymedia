@@ -1,41 +1,59 @@
 # coding: utf-8
 
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-
-from .files import ModelFieldPath
-
-
-class UploadTo(ModelFieldPath):
-
-    def create_name(self, instance, filename):
-        self.access = instance.access
-        return super(UploadTo, self).create_name(instance, filename)
+from . import querysets, defs, methods
 
 
-class MediaFile(models.Model):
-    owner = models.ForeignKey(User)
-    filename = models.CharField(
-        max_length=200, null=True, blank=True)
-    ''' Original name or changed after '''
-    data = models.FileField(upload_to=UploadTo('data'))
-    access = models.CharField(
-        max_length=15, default='protected',
-        choices=(('protected', _('Protected')), ('public', _('Public'))))
+class MediaType(defs.MediaType):
 
-    created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
-    updated_at = models.DateTimeField(_('Updated At'), auto_now=True)
+    class Meta:
+        verbose_name = _('Media Type')
+        verbose_name_plural = _('Media Types')
+
+    objects = querysets.MediaTypeQuerySet.as_manager()
+
+    def __str__(self):
+        return self.label or self.content_type
+
+
+class MediaFile(defs.MediaFile, methods.MediaFile):
 
     class Meta:
         verbose_name = _('Media File')
         verbose_name_plural = _('Media Files')
 
-    def save(self, *args, **kwargs):
-        self.filename = self.filename or self.data.name
-        super(MediaFile, self).save(*args, **kwargs)
+    def __str__(self):
+        return self.filename
 
-    def move_to(self, name):
-        self.data.storage.move(self.data.name, name)
-        self.data.name = name
-        self.save()
+
+class ImageMeta(defs.ImageMeta):
+    image = models.OneToOneField(MediaFile)
+
+    class Meta:
+        verbose_name = _('Image Meta')
+        verbose_name_plural = _('Image Meta')
+
+    objects = querysets.ImageMetaQuerySet.as_manager()
+
+
+class ThumbnailProfile(
+    defs.ThumbnailProfile, methods.ThumbnailProfile,
+):
+
+    class Meta:
+        verbose_name = _('Thumbnail Profile')
+        verbose_name_plural = _('Thumbnail Profiles')
+
+    def __str__(self):
+        return self.name
+
+
+class Thumbnail(defs.Thumbnail):
+    image = models.ForeignKey(MediaFile)
+    profile = models.ForeignKey(ThumbnailProfile)
+
+    class Meta:
+        verbose_name = _('Thumbnail')
+        verbose_name_plural = _('Thumbnails')

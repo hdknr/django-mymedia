@@ -7,6 +7,7 @@ from django.utils.six.moves.urllib.parse import unquote
 from django.utils.timezone import now
 import traceback
 import re
+import os
 
 from logging import getLogger
 logger = getLogger()
@@ -34,7 +35,8 @@ class ModelFieldPath(object):
 
     def create_name(self, instance, filename):
         id = instance.id or "t{:x}".format(round(now().timestamp()))
-        return filename and u"{}.{}".format(id, filename)
+        name, ext = os.path.splitext(os.path.basename(filename))
+        return u"{}.{}{}".format(name, id, ext)
 
     @classmethod
     def get_base_url(cls, access, app_label, model_name, field_name):
