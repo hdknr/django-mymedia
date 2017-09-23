@@ -1,0 +1,39 @@
+{% extends 'mymedia/base.html' %}
+{% load staticfiles i18n %}
+
+{% block local_style %}
+<style>
+.hide-bullets { list-style:none; margin-left: -40px; margin-top:20px; }
+.thumbnail { padding: 0; }
+.carousel-inner>.item>img, .carousel-inner>.item>a>img { width: 100%; }
+</style>
+{% endblock %}
+
+{% block local_script %} {{ block.super }}
+<script type="text/javascript" src="{% static 'lib/vue/dist/vue.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'lib/axios/dist/axios.min.js' %}"></script>
+<script type="text/javascript">
+  {% include "mymedia/imagefile/picker/app.js" %}
+</script>
+<script type="text/javascript">
+  {% include "mymedia/imagefile/picker/jquery.js" %}
+</script>
+{% endblock %}
+
+{% block local_template %}
+  {% include "mymedia/imagefile/picker/thumbnail.html" %}
+  {% include "mymedia/imagefile/picker/carousel.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <div id="app">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imagefile-picker">
+        {% trans 'Select Image' %}
+    </button>
+    {% include "mymedia/imagefile/picker/app.html" %}
+  </div>
+
+</div>
+{% endblock %}
