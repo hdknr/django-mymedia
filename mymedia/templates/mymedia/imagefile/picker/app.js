@@ -21,6 +21,9 @@ var app = new Vue({
             Vue.set(this, 'images', res.data);
             this.$emit('GET_AJAX_COMPLETE');
         });
+      },
+      select_image: function(){
+        $('#imagefile-picker').modal('hide');
       }
   }
 });
