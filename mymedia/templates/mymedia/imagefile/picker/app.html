@@ -41,16 +41,33 @@
               </div>
           </div>
           <div class="row">
-            <div class="col-sm-10">
+            <div class="col-sm-8">
               <button class="btn btn-primary" v-if="images.previous" v-on:click="get_images(images.previous)">Previous</button>
               <button class="btn btn-default" v-for="i in pages" v-on:click="get_images_page(i)">{[{ i }]}</button>
               <button class="btn btn-primary" v-if="images.next" v-on:click="get_images(images.next)">Next</button>
             </div>
-            <div class="col-sm-2">
-              <button class="btn btn-primary" v-on:click="select_image">{% trans 'Select' %}</button>
+            <div class="col-sm-4">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#imagefile-uploader">
+                  {% trans 'Upload...' %}</button>
+                <button class="btn btn-primary" v-on:click="select_image">{% trans 'Select' %}</button>
+              </div>
             </div>
           </div>
           <!--/Slider-->
+        </div><!-- /#main_area -->
+      </div><!--/.modal-body-->
+    </div><!-- /.modal-content -->
+  </div>
+</div>
+
+
+<div class="modal fade" id="imagefile-uploader" tabindex="-1" role="dialog" aria-labelledby="Image File Uploader" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div id="uploader_area">
+          <gallery-uploader></gallery-uploader>
         </div><!-- /#main_area -->
       </div><!--/.modal-body-->
     </div><!-- /.modal-content -->

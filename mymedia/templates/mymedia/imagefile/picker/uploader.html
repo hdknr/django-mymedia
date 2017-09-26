@@ -1,0 +1,11 @@
+<script type="text/x-template" id="gallery-uploader-template">
+<div class="container">
+    <!--UPLOAD-->
+    <form enctype="multipart/form-data" >{% csrf_token %}
+      <h1>Upload images</h1>
+      <div class="dropbox">
+        <input type="file">
+      </div>
+    </form>
+</div>
+</script>

@@ -2,6 +2,7 @@
 Vue.options.delimiters = ['{[{', '}]}'];        // Django テンプレートとバッティングしないように変更
 Vue.component('gallery-thumbnail',{ props: ['image', 'index'], template: '#gallery-thumbnail-template'});
 Vue.component('gallery-carousel',{ props: ['image', 'index'], template: '#gallery-carousel-template'});
+Vue.component('gallery-uploader',{ props: [], template: '#gallery-uploader-template'});
 
 var app = new Vue({
   el: '#app',
