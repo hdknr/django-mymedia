@@ -8,12 +8,14 @@ class MediaFile(object):
     def move_to(self, name):
         self.data.storage.move(self.data.name, name)
         self.data.name = name
+        self.filename = os.path.basename(name)
         self.save()
 
     def build_new_filename(self, name):
         upload_to = self._meta.get_field('data').upload_to
         _x, ext = os.path.splitext(self.data.name)
-        return upload_to(self, name + ext)
+        name =  name if name.endswith(ext) else name + ext
+        return upload_to(self, name)
 
     def set_new_name(self, name):
         return self.move_to(self.build_new_filename(name))
