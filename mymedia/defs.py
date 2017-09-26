@@ -24,6 +24,9 @@ class MediaType(models.Model):
 
 
 class MediaFileBase(models.Model):
+    title = models.CharField(
+        max_length=200, null=True, blank=True)
+    ''' File Title '''
     filename = models.CharField(
         max_length=200, null=True, blank=True)
     ''' Original name or changed after '''

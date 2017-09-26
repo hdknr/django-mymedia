@@ -8,6 +8,7 @@ from django.utils.timezone import now
 import traceback
 import re
 import os
+from .utils import slugify
 
 from logging import getLogger
 logger = getLogger()
@@ -25,7 +26,7 @@ class ModelFieldPath(object):
 
     def __call__(self, instance, filename):
         try:
-            name = self.create_name(instance, filename)
+            name = slugify(self.create_name(instance, filename))
             res = self.get_filepath(
                 self.access, instance._meta.app_label,
                 instance._meta.model_name, self.fieldname, name)
