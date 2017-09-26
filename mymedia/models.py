@@ -3,6 +3,7 @@
 from django.db import models
 # from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from mytaggit.models import TaggableManager
 from . import querysets, defs, methods
 
 
@@ -28,6 +29,7 @@ class MediaFile(defs.MediaFile, methods.MediaFile):
         return self.filename
 
     objects = querysets.MediaFileQuerySet.as_manager()
+    tags = TaggableManager()
 
 
 class ImageMeta(defs.ImageMeta):
@@ -47,9 +49,10 @@ class ThumbnailProfile(
     class Meta:
         verbose_name = _('Thumbnail Profile')
         verbose_name_plural = _('Thumbnail Profiles')
+        ordering = ['order', ]
 
     def __str__(self):
-        return self.name
+        return "{}({} x {})".format(self.name, self.width, self.height)
 
 
 class Thumbnail(defs.Thumbnail):
