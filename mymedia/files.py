@@ -50,7 +50,7 @@ class ModelFieldPath(object):
         return unquote(ret)
 
     @classmethod
-    def get_protected_data(self, name, user, action='download'):
+    def get_protected_data(cls, name, user, action='download'):
         m = re.search(
             r'^(?P<access>[^/]+)/(?P<app_label>[^/]+)/(?P<model_name>[^/]+)/(?P<field_name>[^/]+)/(?P<path>.+)',    # NOQA
             name)

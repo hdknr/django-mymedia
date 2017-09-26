@@ -3,7 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-
+from ordered_model.models import OrderedModel
 from .files import ModelFieldPath
 
 
@@ -64,7 +64,7 @@ class UploadThumbnailTo(ModelFieldPath):
         return super(UploadThumbnailTo, self).create_name(instance, filename)
 
 
-class ThumbnailProfile(models.Model):
+class ThumbnailProfile(OrderedModel):
     name = models.CharField(max_length=20, unique=True)
     width = models.PositiveSmallIntegerField()
     height = models.PositiveSmallIntegerField()

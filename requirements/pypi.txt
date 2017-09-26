@@ -5,3 +5,4 @@ djangorestframework
 djangorestframework-filters
 markdown
 django-filter
+django-ordered-model
