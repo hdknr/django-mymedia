@@ -2,7 +2,50 @@
 Vue.options.delimiters = ['{[{', '}]}'];        // Django テンプレートとバッティングしないように変更
 Vue.component('gallery-thumbnail',{ props: ['image', 'index'], template: '#gallery-thumbnail-template'});
 Vue.component('gallery-carousel',{ props: ['image', 'index'], template: '#gallery-carousel-template'});
-Vue.component('gallery-uploader',{ props: [], template: '#gallery-uploader-template'});
+Vue.component('gallery-uploader',
+  {props: [],
+   data: function(){return {
+      names: {title: '', filename: ''},
+      image: null
+   }},
+   methods: {
+      resetForm(){
+          Vue.set(this, 'image', null);
+          Vue.set(this, 'names', {title: '', filename: ''});
+          $("#upload-form input").val('');
+          $("#imagefile-uploader").modal('hide');
+      },
+      uploadImage(){
+          var config = {headers: {'content-type': 'multipart/form-data'}};
+          var data = new FormData($("#upload-form").get(0));
+          var vm = this;
+          axios.post("{% url 'mymedia_api:imagefile-list' %}", data, config)
+            .then(function(res) { vm.resetForm(); })
+            .catch(function(error) { console.log(error); });
+      },
+      createImage(file) {
+         var image = new Image();
+         var vm = this;
+         var reader = new FileReader();
+         reader.onload = function(e) {
+            var img = {
+                thumnail: e.target.result, uploadFile: file, name: file.name};
+             Vue.set(vm, 'image', img);
+         };
+         reader.readAsDataURL(file);
+      },
+      onFileChanged(e){
+          var files = e.target.files || e.dataTransfer.files;
+          this.createImage(files[0]);
+          let params = new URLSearchParams();
+          params.append('csrfmiddlewaretoken', $('input[name="csrfmiddlewaretoken"]').val());
+          params.append('filename',  files[0].name);
+          return axios.post("{% url 'mymedia_api:filenames' %}", params)
+            .then((res)=>{ Vue.set(this, 'names', res.data); });
+      }
+   },
+   template: '#gallery-uploader-template'}
+);
 
 var app = new Vue({
   el: '#app',
@@ -11,9 +54,9 @@ var app = new Vue({
       pages: [],
       images: {}
   },
-  methods: {
+  methods:  {
       get_images_page: function(p){
-        var url = "{% url 'mymaeida_api:imagefile-list' %}?format=json&page=" + p;
+        var url = "{% url 'mymedia_api:imagefile-list' %}?format=json&page=" + p;
         return this.get_images(url);
       },
       get_images: function(url){

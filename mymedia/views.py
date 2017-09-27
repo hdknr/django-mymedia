@@ -2,9 +2,12 @@
 from django.http import HttpResponse, HttpResponseForbidden
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, pagination
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from mymedia.files import ModelFieldPath
 from mimetypes import guess_type
-from . import models, serializers, filters
+from . import models, serializers, filters, utils
+import os
 
 
 def download(request, name):
@@ -42,3 +45,11 @@ class ImageFileViewSet(MediaFileViewSet):
 
     def get_queryset(self):
         return self.request.user.mediafile_set.filter_image()
+
+
+@api_view(['POST'])
+def filenames(request):
+    name = request.POST.get('filename', '')
+    name = os.path.basename(name)
+    res = {'title': name,'filename': utils.slugify(name)}
+    return Response(res)

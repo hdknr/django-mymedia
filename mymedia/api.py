@@ -10,5 +10,6 @@ router.register(r'imagefiles', views.ImageFileViewSet, base_name='imagefile')
 urlpatterns = [
     url(r'^api/',
         include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^filenames', views.filenames, name="filenames"),
     url(r'^', include(router.urls)),
 ]
