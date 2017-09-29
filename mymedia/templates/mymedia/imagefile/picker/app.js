@@ -48,6 +48,16 @@ Vue.component('gallery-uploader',
             .then((res)=>{ Vue.set(this, 'names', res.data); });
       }
    },
+   mounted(){
+     var vm = this;
+     $("#app").on({
+        'shown.bs.modal': function(){
+            Vue.set(vm, 'image', null);
+            Vue.set(vm, 'names', {title:'', filename:''});
+            $("#upload-form")[0].reset();
+        }
+      }, "#imagefile-uploader");
+   },
    template: '#gallery-uploader-template'}
 );
 
