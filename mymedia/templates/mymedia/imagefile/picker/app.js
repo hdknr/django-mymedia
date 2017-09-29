@@ -59,6 +59,9 @@ var app = new Vue({
       images: {}
   },
   methods:  {
+      firstCarousel(){
+          jQuery('#myCarousel').carousel(0);
+      },
       get_images_page: function(p){
         var url = "{% url 'mymedia_api:imagefile-list' %}?format=json&page=" + p;
         return this.get_images(url);
@@ -67,6 +70,7 @@ var app = new Vue({
         return axios.get(url).then((res) =>{
             Vue.set(this, 'pages', _.range(1, 1 + res.data.count / 16));
             Vue.set(this, 'images', res.data);
+            this.firstCarousel();
             this.$emit('GET_AJAX_COMPLETE');
         });
       },
