@@ -3,8 +3,14 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 from ordered_model.models import OrderedModel
 from .files import ModelFieldPath
+
+
+image_filename_validator = RegexValidator(
+    regex=r'^[a-z]+[a-z\d\-\.]+$',
+    message=_('your-beautifull-photo-01.jpg'))           # TODO: better message
 
 
 class UploadTo(ModelFieldPath):
@@ -28,7 +34,8 @@ class MediaFileBase(models.Model):
         max_length=200, null=True, blank=True)
     ''' File Title '''
     filename = models.CharField(
-        max_length=200, null=True, blank=True)
+        max_length=200, null=True, blank=True,
+        validators=[image_filename_validator])
     ''' Original name or changed after '''
     data = models.FileField(upload_to=UploadTo('data'))
     access = models.CharField(

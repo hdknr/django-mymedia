@@ -18,10 +18,14 @@ Vue.component('gallery-uploader',
       uploadImage(){
           var config = {headers: {'content-type': 'multipart/form-data'}};
           var data = new FormData($("#upload-form").get(0));
+          var tags = data.get('tags');
+          if(tags)    // tags must be JSON list
+              data.set('tags', JSON.stringify(tags.split(',').map((i)=>i.trim())))
           var vm = this;
           axios.post("{% url 'mymedia_api:imagefile-list' %}", data, config)
             .then(function(res) { vm.resetForm(); })
-            .catch(function(error) { console.log(error); });
+            .catch(function(error) {
+                console.log(error.response); });
       },
       createImage(file) {
          var image = new Image();

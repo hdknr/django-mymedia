@@ -3,6 +3,7 @@ boto3
 pillow
 djangorestframework
 djangorestframework-filters
+django-taggit-serializer
 markdown
 django-filter
 django-ordered-model
