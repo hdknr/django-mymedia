@@ -25,7 +25,10 @@
                                   <!-- Carousel items -->
                                   <div class="carousel-inner">
                                       {# vue template #}
-                                      <gallery-carousel v-for="(i, index) in images.results" v-bind:image="i" v-bind:index="index"></gallery-carousel>
+                                      <gallery-carousel
+                                        v-for="(i, index) in images.results"
+                                        v-bind:image="i" v-bind:index="index"
+                                        @on-edit="edit_image"></gallery-carousel>
                                   </div>
                                   <!-- Carousel nav -->
                                   <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
@@ -67,7 +70,7 @@
     <div class="modal-content">
       <div class="modal-body">
         <div id="uploader_area">
-          <gallery-uploader></gallery-uploader>
+          <gallery-uploader v-bind:instance="instance"></gallery-uploader>
         </div><!-- /#main_area -->
       </div><!--/.modal-body-->
     </div><!-- /.modal-content -->
