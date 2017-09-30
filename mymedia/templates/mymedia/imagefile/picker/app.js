@@ -38,7 +38,6 @@ Vue.component('gallery-uploader',
 
           var file_data = data.getAll("data");
           if(file_data){
-              console.log(file_data);
               if(file_data[0].size < 1){
                   data.delete('data');
               }

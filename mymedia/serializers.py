@@ -28,3 +28,14 @@ class MediaFileSerializer(TaggitSerializer, serializers.ModelSerializer):
         if data and filename:
             data.name = filename
         return super(MediaFileSerializer, self).create(validated_data)
+
+
+    def update(self, instance, validated_data):
+        new_filename = validated_data.get('filename', instance.filename)
+        new_access = validated_data.get('access', instance.access)
+        renamed = instance.filename != new_filename or \
+            instance.access != new_access
+        result = super(MediaFileSerializer, self).update(instance, validated_data)
+        if renamed:
+            result.set_new_name(instance.filename)
+        return result
