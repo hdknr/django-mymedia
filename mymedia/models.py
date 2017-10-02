@@ -24,6 +24,7 @@ class MediaFile(defs.MediaFile, methods.MediaFile):
     class Meta:
         verbose_name = _('Media File')
         verbose_name_plural = _('Media Files')
+        ordering = ['-id', ]
 
     def __str__(self):
         return self.filename

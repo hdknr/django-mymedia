@@ -45,10 +45,11 @@
           </div>
           <div class="row">
             <div class="col-sm-8">
-              <button class="btn btn-primary" v-if="images.previous" v-on:click="get_images(images.previous)">Previous</button>
-              <button class="btn btn-default" v-for="i in pages" v-on:click="get_images_page(i)">{[{ i }]}</button>
-              <button class="btn btn-primary" v-if="images.next" v-on:click="get_images(images.next)">Next</button>
+              <button class="btn btn-primary" v-if="images.previous" v-on:click="get_images_page(current_page - 1)">Previous</button>
+              <button class="btn" v-bind:class="buttonClass(i)"  v-for="i in pages" v-on:click="get_images_page(i)"> {[{ i}]} </button>
+              <button class="btn btn-primary" v-if="images.next" v-on:click="get_images_page(current_page + 1)">Next</button>
             </div>
+
             <div class="col-sm-4">
               <div class="btn-group" role="group" aria-label="Basic example">
                 <button class="btn btn-primary" data-toggle="modal" data-target="#imagefile-uploader">
@@ -70,7 +71,7 @@
     <div class="modal-content">
       <div class="modal-body">
         <div id="uploader_area">
-          <gallery-uploader v-bind:instance="instance"></gallery-uploader>
+          <gallery-uploader v-bind:instance="instance" @on-reset-form="get_images_page"></gallery-uploader>
         </div><!-- /#main_area -->
       </div><!--/.modal-body-->
     </div><!-- /.modal-content -->

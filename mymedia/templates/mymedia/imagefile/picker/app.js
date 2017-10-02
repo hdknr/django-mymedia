@@ -22,11 +22,13 @@ Vue.component('gallery-uploader',
       }
    },
    methods: {
-      resetForm(){
+      resetForm(created){
           Vue.set(this, 'image', null);
           Vue.set(this, 'names', {title: '', filename: ''});
           $("#upload-form input").val('');
           $("#imagefile-uploader").modal('hide');
+          var p = created ? 1 : null;   // null := current
+          this.$emit('on-reset-form', p);
       },
       uploadImage(){
           var config = {headers: {'content-type': 'multipart/form-data'}};
@@ -49,14 +51,14 @@ Vue.component('gallery-uploader',
             axios.patch(vm.endpoint, data, config)
             .then(function(res) {
                 vm.instance = null;
-                vm.resetForm(); })
+                vm.resetForm(false); })
             .catch(function(error) {
                 console.log(error.response); });
           else
             axios.post(vm.endpoint, data, config)
             .then(function(res) {
                 vm.instance = null;
-                vm.resetForm(); })
+                vm.resetForm(true); })
             .catch(function(error) {
                 console.log(error.response); });
       },
@@ -106,20 +108,38 @@ Vue.component('gallery-uploader',
 var app = new Vue({
   el: '#app',
   data: {
+      current_page:1,
       instance: null,
       message: 'Hello',
       pages: [],
       images: {}
   },
+  computed: {
+      last_page : function(){
+          if(pages.length > 1)
+            return pages[pages.length -1];
+          return 1;
+      },
+      page_url: function(){
+        return "{% url 'mymedia_api:imagefile-list' %}?format=json&page=" + this.current_page;
+      }
+  },
   methods:  {
+      buttonClass(i){
+          return this.current_page == i ? 'btn-primary' : 'btn-default';
+      },
       firstCarousel(){
           jQuery('#myCarousel').carousel(0);
       },
       get_images_page: function(p){
-        var url = "{% url 'mymedia_api:imagefile-list' %}?format=json&page=" + p;
-        return this.get_images(url);
+        console.log("get_images_page....", p);
+        if ( p == null || p == undefined) p = this.current_page;
+        else if (p < 0) p = this.pages[this.pages.length-1];
+        Vue.set(this, 'current_page', p);
+        return this.get_images(null);
       },
       get_images: function(url){
+        url = (url) ? url : this.page_url;
         return axios.get(url).then((res) =>{
             Vue.set(this, 'pages', _.range(1, 1 + res.data.count / 16));
             Vue.set(this, 'images', res.data);
