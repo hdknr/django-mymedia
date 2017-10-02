@@ -39,26 +39,17 @@ Vue.component('gallery-uploader',
           var vm = this;
 
           var file_data = data.getAll("data");
-          if(file_data){
-              if(file_data[0].size < 1){
-                  data.delete('data');
-              }
+          if(file_data && file_data[0].size < 1){
+              data.delete('data');
           }
+
           axios.defaults.xsrfCookieName = 'csrftoken';
           axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-
-          if(vm.instance)
-            axios.patch(vm.endpoint, data, config)
+          var method = vm.instance ? 'patch' : 'post';
+          axios[method](vm.endpoint, data, config)
             .then(function(res) {
                 vm.instance = null;
                 vm.resetForm(false); })
-            .catch(function(error) {
-                console.log(error.response); });
-          else
-            axios.post(vm.endpoint, data, config)
-            .then(function(res) {
-                vm.instance = null;
-                vm.resetForm(true); })
             .catch(function(error) {
                 console.log(error.response); });
       },
@@ -108,40 +99,36 @@ Vue.component('gallery-uploader',
 var app = new Vue({
   el: '#app',
   data: {
-      current_page:1,
       instance: null,
-      message: 'Hello',
-      pages: [],
       images: {}
   },
   computed: {
       last_page : function(){
-          if(pages.length > 1)
-            return pages[pages.length -1];
-          return 1;
-      },
-      page_url: function(){
-        return "{% url 'mymedia_api:imagefile-list' %}?format=json&page=" + this.current_page;
+          return this.images.page_range[this.images.page_range.length - 1]
       }
   },
   methods:  {
+      page_url(page){
+        if (page == null || page == undefined)
+          page = this.images.current_page == undefined ? 1: this.images.current_page;
+        return "{% url 'mymedia_api:imagefile-list' %}?format=json&page=" + page;
+      },
       buttonClass(i){
-          return this.current_page == i ? 'btn-primary' : 'btn-default';
+          return this.images.current_page == i ? 'btn-primary' : 'btn-default';
       },
       firstCarousel(){
           jQuery('#myCarousel').carousel(0);
       },
-      get_images_page: function(p){
-        console.log("get_images_page....", p);
-        if ( p == null || p == undefined) p = this.current_page;
-        else if (p < 0) p = this.pages[this.pages.length-1];
-        Vue.set(this, 'current_page', p);
-        return this.get_images(null);
+      get_next_page(p) {
+          return this.get_images_page(this.images.current_page + p);
+      },
+      get_images_page(page){
+        if (page == null || page == undefined) page = this.images.current_page;
+        else if (page < 0) page = 1;
+        return this.get_images(this.page_url(page));
       },
       get_images: function(url){
-        url = (url) ? url : this.page_url;
         return axios.get(url).then((res) =>{
-            Vue.set(this, 'pages', _.range(1, 1 + res.data.count / 16));
             Vue.set(this, 'images', res.data);
             this.firstCarousel();
             this.$emit('GET_AJAX_COMPLETE');
@@ -157,6 +144,7 @@ var app = new Vue({
           });
       },
       select_image: function(){
+        // TODO:
         $('#imagefile-picker').modal('hide');
       }
   }

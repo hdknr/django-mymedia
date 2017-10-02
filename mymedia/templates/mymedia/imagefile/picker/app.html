@@ -45,9 +45,9 @@
           </div>
           <div class="row">
             <div class="col-sm-8">
-              <button class="btn btn-primary" v-if="images.previous" v-on:click="get_images_page(current_page - 1)">Previous</button>
-              <button class="btn" v-bind:class="buttonClass(i)"  v-for="i in pages" v-on:click="get_images_page(i)"> {[{ i}]} </button>
-              <button class="btn btn-primary" v-if="images.next" v-on:click="get_images_page(current_page + 1)">Next</button>
+              <button class="btn btn-primary" v-if="images.previous" v-on:click="get_next_page(-1)">Previous</button>
+              <button class="btn" v-bind:class="buttonClass(i)"  v-for="i in images.page_range" v-on:click="get_images_page(i)"> {[{ i}]} </button>
+              <button class="btn btn-primary" v-if="images.next" v-on:click="get_next_page(1)">Next</button>
             </div>
 
             <div class="col-sm-4">
