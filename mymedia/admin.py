@@ -22,7 +22,7 @@ class ImageMetaAdmin(admin.ModelAdmin):
 
 @admin.register(models.ThumbnailProfile)
 class ThumbnailProfileAdmin(OrderedModelAdmin):
-    list_display = ['id', 'order', 'width', 'height', 'info', 'move_up_down_links', ]
+    list_display = ['id', 'order', 'name', 'width', 'height', 'info', 'move_up_down_links', ]
 
 
 @admin.register(models.Thumbnail)
