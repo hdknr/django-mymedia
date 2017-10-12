@@ -1,5 +1,6 @@
 # coding: utf-8
 from django.contrib import admin
+from django.utils.safestring import SafeString as _S
 from ordered_model.admin import OrderedModelAdmin
 from mptt.admin import MPTTModelAdmin
 from mptt.forms import TreeNodeChoiceField
@@ -41,4 +42,7 @@ class PathAdmin(MPTTModelAdmin):
 @admin.register(models.StaticFile)
 class StaticFileAdmin(admin.ModelAdmin):
     list_display = ['id', 'full_path', 'basename', ]
-    readonly_fields = ['full_path']
+    readonly_fields = ['full_path', 'link', ]
+
+    def link(self, obj):
+        return _S('<a href="{u}">{u}</a>'.format(u=obj.url))

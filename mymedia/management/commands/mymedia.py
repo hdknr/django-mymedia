@@ -26,3 +26,14 @@ def add_mediafile(ctx, path, user_id, public):
         access=access,
         owner=User.objects.filter(id=user_id).first()
     ).save()
+
+
+@main.command()
+@click.argument('src')
+@click.argument('dst')
+@click.pass_context
+def add_staticfile(ctx, src, dst):
+    '''Add a static file'''
+    data = File(open(src, 'rb'))
+    staticfile, _x = models.StaticFile.objects.get_or_create_from_path(dst)
+    staticfile and staticfile.update_content(data)

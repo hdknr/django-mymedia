@@ -1,4 +1,5 @@
 # coding: utf-8
+from django.contrib.staticfiles.storage import staticfiles_storage
 from . import images
 import os
 
@@ -10,6 +11,13 @@ class StaticFile(object):
         return self.path and '/'.join([self.path.full_path, self.basename]) \
             or self.basename
 
+    def update_content(self, fileobj):
+        staticfiles_storage.save(self.full_path, fileobj)
+
+    @property
+    def url(self):
+        return staticfiles_storage.url(self.full_path)
+    
 
 class MediaFile(object):
 
