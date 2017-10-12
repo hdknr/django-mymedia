@@ -7,3 +7,4 @@ django-taggit-serializer
 markdown
 django-filter
 django-ordered-model
+django-mptt

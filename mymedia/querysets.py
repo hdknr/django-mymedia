@@ -2,7 +2,30 @@
 from django.db import models
 from mimetypes import guess_type
 from PIL import Image, ExifTags
+from mptt.models import TreeManager
 from . import encoders
+import os
+
+
+class PathManager(TreeManager):
+
+    def from_path(self, full_path):
+        paths = [i for i in full_path.split('/') if i]
+        level = len(paths) - 1
+        path = None
+        for i in range(len(paths)):
+            path, created = self.get_or_create(
+                node=paths[i], level=i, parent=path)
+        return path
+
+class StaticFileQuerySet(models.QuerySet):
+
+    def get_or_create_from_path(self, full_path):
+        from . models import Path
+        dirname = os.path.dirname(full_path)
+        basename = os.path.basename(full_path)
+        path = dirname and Path.objects.from_path(dirname)
+        return self.get_or_create(path=path, basename=basename)
 
 
 class MediaTypeQuerySet(models.QuerySet):

@@ -1,6 +1,8 @@
 # coding: utf-8
 from django.contrib import admin
 from ordered_model.admin import OrderedModelAdmin
+from mptt.admin import MPTTModelAdmin
+from mptt.forms import TreeNodeChoiceField
 from . import models
 
 
@@ -29,3 +31,14 @@ class ThumbnailProfileAdmin(OrderedModelAdmin):
 class ThumbnailAdmin(admin.ModelAdmin):
     list_display = ['id', 'image', 'data', ]
     raw_id_fields = ['image', ]
+
+
+@admin.register(models.Path)
+class PathAdmin(MPTTModelAdmin):
+    pass
+
+
+@admin.register(models.StaticFile)
+class StaticFileAdmin(admin.ModelAdmin):
+    list_display = ['id', 'full_path', 'basename', ]
+    readonly_fields = ['full_path']

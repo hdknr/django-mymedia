@@ -8,6 +8,13 @@ from ordered_model.models import OrderedModel
 from .files import ModelFieldPath
 
 
+class StaticFile(models.Model):
+    basename = models.CharField(max_length=200)
+
+    class Meta:
+        abstract = True
+
+
 image_filename_validator = RegexValidator(
     regex=r'^[a-z]+[a-z\d\-\.]+$',
     message=_('your-beautifull-photo-01.jpg'))           # TODO: better message

@@ -3,6 +3,14 @@ from . import images
 import os
 
 
+class StaticFile(object):
+
+    @property
+    def full_path(self):
+        return self.path and '/'.join([self.path.full_path, self.basename]) \
+            or self.basename
+
+
 class MediaFile(object):
 
     def move_to(self, name):
