@@ -20,12 +20,15 @@ class PathManager(TreeManager):
 
 class StaticFileQuerySet(models.QuerySet):
 
-    def get_or_create_from_path(self, full_path):
+    def path_and_basename(self, full_path):
         from . models import Path
         dirname = os.path.dirname(full_path)
         basename = os.path.basename(full_path)
         path = dirname and Path.objects.from_path(dirname)
-        return self.get_or_create(path=path, basename=basename)
+        return dict(path=path, basename=basename)
+
+    def get_or_create_from_path(self, full_path):
+        return self.get_or_create(**self.path_and_basename(full_path))
 
 
 class MediaTypeQuerySet(models.QuerySet):

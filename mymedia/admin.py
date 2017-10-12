@@ -4,7 +4,7 @@ from django.utils.safestring import SafeString as _S
 from ordered_model.admin import OrderedModelAdmin
 from mptt.admin import MPTTModelAdmin
 from mptt.forms import TreeNodeChoiceField
-from . import models
+from . import models, forms
 
 
 class ThumbnailAdminInline(admin. TabularInline):
@@ -41,6 +41,7 @@ class PathAdmin(MPTTModelAdmin):
 
 @admin.register(models.StaticFile)
 class StaticFileAdmin(admin.ModelAdmin):
+    form = forms.StaticFileForm
     list_display = ['id', 'full_path', 'basename', ]
     readonly_fields = ['full_path', 'link', ]
 
