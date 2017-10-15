@@ -35,9 +35,10 @@ class ModelFieldPath(object):
             logger.error(traceback.format_exc())
 
     def create_name(self, instance, filename):
-        id = instance.id or "t{:x}".format(round(now().timestamp()))
-        name, ext = os.path.splitext(os.path.basename(filename))
-        return u"{}.{}{}".format(name, id, ext)
+        n = now()
+        id = instance.id or "t{:x}".format(int(n.strftime('%H%M%S')))
+        prefix = n.strftime("%Y/%m%d")
+        return u"{}/{}.{}".format(prefix, id, filename)
 
     @classmethod
     def get_base_url(cls, access, app_label, model_name, field_name):
