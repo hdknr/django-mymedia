@@ -6,8 +6,8 @@ Vue.component('gallery-carousel',{
     mounted(){},
     template: '#gallery-carousel-template'
 });
-Vue.component('gallery-uploader',
-  {props: ['instance'],
+Vue.component('gallery-uploader', {
+   props: ['instance'],
    data: function(){return {
       names: {title: '', filename: ''},
       tags: '',

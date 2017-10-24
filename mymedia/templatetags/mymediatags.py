@@ -14,5 +14,4 @@ def mediafile_form():
 def thumbnail_url(media, profile='default'):
     tp = models.ThumbnailProfile.objects.filter(name=profile).first()
     tp_media = tp and tp.get_thumbnail_for(media)
-    print(tp, tp_media, profile, media)
     return tp_media and tp_media.data.url
