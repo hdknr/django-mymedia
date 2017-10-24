@@ -1,5 +1,13 @@
+{% load i18n %}{# https://getbootstrap.com/docs/3.3/javascript/#carousel #}
 <script type="text/x-template" id="gallery-carousel-template">
-<div class="item" v-bind:class="{active: index == 0}" v-bind:data-slide-number="index">
-    <img v-bind:src="image.data" v-bind:image_id="image.id" @click="$emit('on-edit', image.id)">
-</div>
+
+  <div class="item text-center" v-bind:class="{active: index == 0}" v-bind:data-slide-number="index">
+      <img v-bind:src="image.data" v-bind:image_id="image.id" @click="$emit('on-edit', image.id)">
+
+      <div class="checkbox checkbox-info checkbox-circle">
+        <input type="checkbox" @click="$emit('on-select', image)" v-model="image.selected">
+        <label>{% trans 'Check to select Madia File' %}</label>
+      </div>
+  </div>
+
 </script>

@@ -9,7 +9,7 @@
             var id = /-(\d+)$/.exec(id_selector)[1];
             jQuery('#myCarousel').carousel(parseInt(id));
           } catch (e) {
-            console.log('Regex failed!', e);
+            // console.log('Regex failed!', e);
           }
         }
     }, "a.thumbnail" );

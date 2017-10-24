@@ -1,11 +1,8 @@
 {% load staticfiles %}
 Vue.options.delimiters = ['{[{', '}]}'];        // Django テンプレートとバッティングしないように変更
 Vue.component('gallery-thumbnail',{ props: ['image', 'index'], template: '#gallery-thumbnail-template'});
-Vue.component('gallery-carousel',{
-    props: ['image', 'index'],
-    mounted(){},
-    template: '#gallery-carousel-template'
-});
+Vue.component('gallery-carousel', { props: ['image', 'index'], template: '#gallery-carousel-template'});
+Vue.component('gallery-selection', { props: ['image', 'index'], template: '#gallery-selection-template'});
 Vue.component('gallery-uploader', {
    props: ['instance'],
    data: function(){return {
@@ -99,6 +96,8 @@ Vue.component('gallery-uploader', {
 var app = new Vue({
   el: '#app',
   data: {
+      selected_list: {},        // selected MediaFiles
+      max_selection:1,
       instance: null,
       images: {}
   },
@@ -108,6 +107,12 @@ var app = new Vue({
       }
   },
   methods:  {
+      resetPicker(max_selection){
+          Vue.set(this, 'max_selection',
+            (max_selection == undefined) ? 1 : this.max_selection = max_selection);
+          Vue.set(this, 'selected_list', {});
+          this.get_images_page(1);
+      },
       page_url(page){
         if (page == null || page == undefined)
           page = this.images.current_page == undefined ? 1: this.images.current_page;
@@ -128,10 +133,14 @@ var app = new Vue({
         return this.get_images(this.page_url(page));
       },
       get_images: function(url){
+        var vm  = this;
         return axios.get(url).then((res) =>{
+            res.data.results.forEach(function(val){
+              val.selected =  val.id in vm.selected_list;
+            });
             Vue.set(this, 'images', res.data);
             this.firstCarousel();
-            this.$emit('GET_AJAX_COMPLETE');
+            // this.$emit('GET_AJAX_COMPLETE');
         });
       },
       edit_image: function(image_id){
@@ -140,14 +149,23 @@ var app = new Vue({
           return axios.get(url).then((res) =>{
               Vue.set(this, 'instance', res.data);
               $("#imagefile-uploader").modal('show');
-              this.$emit('GET_AJAX_COMPLETE');
+              //this.$emit('GET_AJAX_COMPLETE');
           });
       },
-      select_image: function(){
-        // TODO:
-        $('#imagefile-picker').modal('hide');
+      select_image: function(image){
+        if(image.selected){
+          this.selected_list[image.id] = Object.assign({}, image);
+        }else {
+          delete this.selected_list[image.id];
+          this.images.results.filter(
+            function(e, i, a){return (e.id == image.id);})
+              .map(function(e, i, a){e.selected = false;});
+        }
+        Vue.set(this, 'selected_list', Object.assign({}, this.selected_list));
+        if(Object.keys(this.selected_list).length >= this.max_selection){
+            $('#imagefile-picker').modal('hide');
+        }
       }
   }
 });
-
-app.get_images_page(1);
+// {#  app.get_images_page(1); #}
