@@ -96,3 +96,10 @@ class Thumbnail(models.Model):
 
     class Meta:
         abstract = True
+
+
+class Album(models.Model):
+    title = models.CharField(max_length=100)
+
+    class Meta:
+        abstract = True

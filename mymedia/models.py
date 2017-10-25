@@ -1,8 +1,7 @@
-# coding: utf-8
-
 from django.db import models
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from ordered_model.models import OrderedModel
 from mptt.models import MPTTModel, TreeForeignKey
 from mytaggit.models import TaggableManager
 from . import querysets, defs, methods
@@ -94,3 +93,35 @@ class Thumbnail(defs.Thumbnail):
     class Meta:
         verbose_name = _('Thumbnail')
         verbose_name_plural = _('Thumbnails')
+
+class Album(defs.Album):
+
+    class Meta:
+        verbose_name = _('Album')
+        verbose_name_plural = _('Albums')
+
+    def __str__(self):
+        return self.title
+
+
+class Album(defs.Album):
+    owner = models.ForeignKey(User)
+
+    class Meta:
+        verbose_name = _('Album')
+        verbose_name_plural = _('Albums')
+
+    def __str__(self):
+        return self.title
+
+
+class AlbumFile(OrderedModel):
+    album = models.ForeignKey(Album)
+    mediafile = models.ForeignKey(MediaFile)
+
+    order_with_respect_to = 'album'
+    order_class_path = 'mymedia.models.AlbumFile'
+
+    class Meta:
+        verbose_name = _('Album File')
+        verbose_name_plural = _('Album Files')
