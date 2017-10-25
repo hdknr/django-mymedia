@@ -1,13 +1,13 @@
 # coding: utf-8
 from django.conf.urls import url, include
 from rest_framework.routers import DefaultRouter
-from . import views
+from . import views, viewsets
 
 router = DefaultRouter()
-router.register(r'mediafiles', views.MediaFileViewSet, base_name='mediafile')
-router.register(r'imagefiles', views.ImageFileViewSet, base_name='imagefile')
-router.register(r'albums', views.AlbumViewSet, base_name='album')
-router.register(r'albumfiles', views.AlbumFileViewSet, base_name='albumfile')
+router.register(r'mediafiles', viewsets.MediaFileViewSet, base_name='mediafile')
+router.register(r'imagefiles', viewsets.ImageFileViewSet, base_name='imagefile')
+router.register(r'albums', viewsets.AlbumViewSet, base_name='album')
+router.register(r'albumfiles', viewsets.AlbumFileViewSet, base_name='albumfile')
 
 urlpatterns = [
     url(r'^api/',
