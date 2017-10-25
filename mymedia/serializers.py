@@ -39,3 +39,27 @@ class MediaFileSerializer(TaggitSerializer, serializers.ModelSerializer):
         if renamed:
             result.set_new_name(instance.filename)
         return result
+
+
+class AlbumSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Album
+        fields = '__all__'
+        read_only_fields = ('owner', )
+
+
+class AlbumFileSerializer(serializers.ModelSerializer):
+    mediafile = MediaFileSerializer(many=False)
+
+    class Meta:
+        model = models.AlbumFile
+        fields = ['album', 'mediafile', ]
+
+    def create(self, validated_data):
+        mediafile = validated_data.pop('mediafile')
+        mediafile['owner'] = validated_data.pop('owner', None)
+        validated_data['mediafile'] = \
+            models.MediaFile.objects.create(**mediafile)
+        res = super(AlbumFileSerializer, self).create(validated_data)
+        return res

@@ -6,6 +6,8 @@ from . import views
 router = DefaultRouter()
 router.register(r'mediafiles', views.MediaFileViewSet, base_name='mediafile')
 router.register(r'imagefiles', views.ImageFileViewSet, base_name='imagefile')
+router.register(r'albums', views.AlbumViewSet, base_name='album')
+router.register(r'albumfiles', views.AlbumFileViewSet, base_name='albumfile')
 
 urlpatterns = [
     url(r'^api/',

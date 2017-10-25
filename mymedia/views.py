@@ -58,9 +58,48 @@ class ImageFileViewSet(MediaFileViewSet):
         return self.request.user.mediafile_set.filter_image()
 
 
+class AlbumViewSet(viewsets.ModelViewSet):
+    queryset = models.Album.objects.all()
+    serializer_class = serializers.AlbumSerializer
+    filter_class = filters.AlbumFilter
+    permission_classes = (IsAuthenticated, )
+    pagination_class = Pagination
+
+    def get_queryset(self):
+        return self.request.user.album_set.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class AlbumFileViewSet(viewsets.ModelViewSet):
+    queryset = models.AlbumFile.objects.all()
+    serializer_class = serializers.AlbumFileSerializer
+    filter_class = filters.AlbumFileFilter
+    permission_classes = (IsAuthenticated, )
+    pagination_class = Pagination
+
+    def get_queryset(self):
+        res = super(AlbumFileViewSet, self).get_queryset()
+        return res.filter(album__owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
 @api_view(['POST'])
 def filenames(request):
     name = request.POST.get('filename', '')
     name = os.path.basename(name)
     res = {'title': name,'filename': utils.slugify(name)}
     return Response(res)
+
+
+def album_list(request):
+    '''request.user's Album list'''
+    pass
+
+
+def album_detail(self, id):
+    '''Album Detail/Edit'''
+    pass
