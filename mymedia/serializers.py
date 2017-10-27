@@ -54,7 +54,8 @@ class AlbumFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.AlbumFile
-        fields = ['album', 'mediafile', ]
+        # fields = ['id', 'album', 'mediafile', 'order']
+        fields = '__all__'
 
     def create(self, validated_data):
         mediafile = validated_data.pop('mediafile')
@@ -63,3 +64,7 @@ class AlbumFileSerializer(serializers.ModelSerializer):
             models.MediaFile.objects.create(**mediafile)
         res = super(AlbumFileSerializer, self).create(validated_data)
         return res
+
+    def update(self, instance, validated_data):
+        result = super(AlbumFileSerializer, self).update(instance, validated_data)
+        return result

@@ -69,3 +69,8 @@ class AlbumFileViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def perform_update(self, serializer):
+        order = self.request.data.get('order', 0)   # TODO: POST
+        params = order and {'order': order} or {}
+        serializer.save(**params)

@@ -125,3 +125,4 @@ class AlbumFile(OrderedModel):
     class Meta:
         verbose_name = _('Album File')
         verbose_name_plural = _('Album Files')
+        ordering = ['album', 'order', ]
