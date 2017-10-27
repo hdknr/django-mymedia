@@ -101,16 +101,18 @@ var Uploader = Vue.extend({
         }
       }, "#imagefile-uploader");
    },
-   template: '#gallery-uploader-template'}
-);
+   template: '#gallery-uploader-template'
+});
 
-var app = new Vue({
-  el: '#app',
-  data: {
+var Picker = Vue.extend({
+  template: '#gallery-picker-template',
+  data: function(){
+    return {
       selected_list: {},        // selected MediaFiles
       max_selection:1,
       instance: null,
       images: {}
+    };
   },
   components: {
    'gallery-thumbnail': Thumbnail,
@@ -125,12 +127,11 @@ var app = new Vue({
   },
   methods:  {
       resetPicker(max_selection){
+          console.log("resetPicker");
           Vue.set(this, 'max_selection',
             (max_selection == undefined) ? 1 : this.max_selection = max_selection);
           Vue.set(this, 'selected_list', {});
           this.get_images_page(1);
-          console.log()
-          this.$refs.gallery_uploader.test();        // TEST
       },
       page_url(page){
         if (page == null || page == undefined)
@@ -184,6 +185,25 @@ var app = new Vue({
         if(Object.keys(this.selected_list).length >= this.max_selection){
             $('#imagefile-picker').modal('hide');
         }
+      }
+  }
+});
+
+var app = new Vue({
+  el: '#app',
+  components: {'gallery-picker': Picker },
+  computed: {
+      selected_list(){
+          this.$refs.picker.selected_list;
+      }
+  },
+  methods:  {
+      getValues(){
+          return Object.values(this.$refs.picker.selected_list);
+      },
+      openPicker(count){
+        $("#imagefile-picker").modal();
+        this.$refs.picker.resetPicker(count);
       }
   }
 });
