@@ -19,6 +19,9 @@ Vue.component('gallery-uploader', {
       }
    },
    methods: {
+      test(){
+            console.log("gallery-uploader test method called");
+      },
       resetForm(created){
           Vue.set(this, 'image', null);
           Vue.set(this, 'names', {title: '', filename: ''});
@@ -112,6 +115,8 @@ var app = new Vue({
             (max_selection == undefined) ? 1 : this.max_selection = max_selection);
           Vue.set(this, 'selected_list', {});
           this.get_images_page(1);
+          console.log()
+          this.$refs.gallery_uploader.test();        // TEST
       },
       page_url(page){
         if (page == null || page == undefined)
