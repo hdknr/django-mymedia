@@ -1,9 +1,17 @@
 {% load staticfiles %}
 Vue.options.delimiters = ['{[{', '}]}'];        // Django テンプレートとバッティングしないように変更
-Vue.component('gallery-thumbnail',{ props: ['image', 'index'], template: '#gallery-thumbnail-template'});
-Vue.component('gallery-carousel', { props: ['image', 'index'], template: '#gallery-carousel-template'});
-Vue.component('gallery-selection', { props: ['image', 'index'], template: '#gallery-selection-template'});
-Vue.component('gallery-uploader', {
+
+var Thumbnail = Vue.extend({
+    props: ['image', 'index'], template: '#gallery-thumbnail-template',
+});
+var Carousel = Vue.extend({
+    props: ['image', 'index'], template: '#gallery-carousel-template',
+});
+var Selection = Vue.extend({
+    props: ['image', 'index'], template: '#gallery-selection-template',
+});
+
+var Uploader = Vue.extend({
    props: ['instance'],
    data: function(){return {
       names: {title: '', filename: ''},
@@ -103,6 +111,12 @@ var app = new Vue({
       max_selection:1,
       instance: null,
       images: {}
+  },
+  components: {
+   'gallery-thumbnail': Thumbnail,
+   'gallery-carousel': Carousel,
+   'gallery-selection': Selection,
+   'gallery-uploader': Uploader
   },
   computed: {
       last_page : function(){

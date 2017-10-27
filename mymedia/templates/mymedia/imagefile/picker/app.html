@@ -19,7 +19,10 @@
                   <!-- Bottom switcher of slider -->
                   <ul class="hide-bullets">
                       {# vue template #}
-                      <gallery-thumbnail v-for="(i, index) in images.results" v-bind:image="i" v-bind:index="index"></gallery-thumbnail>
+                      <gallery-thumbnail
+                        v-for="(i, index) in images.results"
+                        v-bind:image="i" v-bind:index="index">
+                      </gallery-thumbnail>
                   </ul>
               </div>
 
