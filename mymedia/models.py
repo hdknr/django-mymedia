@@ -104,8 +104,9 @@ class Album(defs.Album):
         return self.title
 
 
-class Album(defs.Album):
+class Album(defs.Album, methods.Album):
     owner = models.ForeignKey(User)
+    files = models.ManyToManyField(MediaFile, through='AlbumFile')
 
     class Meta:
         verbose_name = _('Album')

@@ -17,7 +17,7 @@ class StaticFile(object):
     @property
     def url(self):
         return staticfiles_storage.url(self.full_path)
-    
+
 
 class MediaFile(object):
 
@@ -58,3 +58,13 @@ class ThumbnailProfile(object):
             media.thumbnail_set.create(profile=self, data=resized)
 
         return thumbnail
+
+
+class Album(object):
+    def update_files(self, file_list):
+        dels = set(self.files.all()) - set(file_list)
+        self.albumfile_set.filter(mediafile__in=list(dels)).delete()
+        for i in file_list:
+            mf, created = self.albumfile_set.get_or_create(mediafile=i)
+            mf.order = file_list.index(i) + 1
+            mf.save()
