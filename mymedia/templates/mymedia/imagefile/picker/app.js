@@ -189,9 +189,50 @@ var Picker = Vue.extend({
   }
 });
 
+
+var Slide = Vue.extend({
+  template: '#gallery-slide-template',
+  data: function(){
+    return {
+      mediafiles: [],
+      drag: null,
+      dragenter: null
+    };
+  },
+  methods: {
+    on_dragstart(mediafile,e) {
+       Vue.set(this, 'drag', mediafile);
+     },
+     on_dragenter(mediafile, e){
+       Vue.set(this, 'dragenter', mediafile);
+     },
+     on_drop(e) {
+       // swap postion
+       this.mediafiles[this.drag] = this.mediafiles.splice(
+          this.dragenter, 1, this.mediafiles[this.drag])[0];
+     },
+      showSlide(mediafiles){
+          Vue.set(this, 'mediafiles', mediafiles);
+      },
+      moveFile(mediafile_id, position){
+          item = this.mediafiles.filter(item => item.id == mediafile_id);
+          arr = this.mediafiles.filter(item => item.id != mediafile_id);
+          arr.splice(position, 0, item[0]);
+          Vue.set(this, 'mediafiles', arr).slice(0);
+      },
+      addFiles(mediafiles){
+          var arr = this.mediafiles.concat(mediafiles);
+          Vue.set(this, 'mediafiles', arr);
+      }
+  }
+});
+
 var app = new Vue({
   el: '#app',
-  components: {'gallery-picker': Picker },
+  components: {
+      'gallery-slide': Slide,
+      'gallery-picker': Picker
+  },
   computed: {
       selected_list(){
           this.$refs.picker.selected_list;
@@ -200,6 +241,9 @@ var app = new Vue({
   methods:  {
       getValues(){
           return Object.values(this.$refs.picker.selected_list);
+      },
+      openSlide(mediafiles){
+        this.$refs.slide.showSlide(mediafiles);
       },
       openPicker(count){
         $("#imagefile-picker").modal();

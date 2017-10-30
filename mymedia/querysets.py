@@ -45,6 +45,11 @@ class MediaFileQuerySet(models.QuerySet):
         return self.filter(
             media_type__content_type__startswith='image/', **kwargs)
 
+    def to_json(self):
+        from .serializers import MediaFileSerializer
+        return encoders.BaseObjectEncoder.to_json(
+            MediaFileSerializer(self.all(), many=True).data)
+
 
 class ImageMetaQuerySet(models.QuerySet):
 

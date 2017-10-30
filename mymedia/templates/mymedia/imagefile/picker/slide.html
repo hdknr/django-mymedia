@@ -1,0 +1,17 @@
+{% load bootstrap3 i18n %}
+<script type="text/x-template" id="gallery-slide-template">
+  <div class="container" >
+    <div class="row">
+      <div class="col-md-12" id="slide-container">
+          <div class="col-md-2" v-for="(media, position) in mediafiles" v-bind:mediafile-id="media.id"
+            @dragstart="on_dragstart(position, $event)"
+            @dragenter="on_dragenter(position, $event)"
+            @dragend="on_drop($event)"
+            draggable="true">
+            {[{ media.id }]}
+            <img class="img-responsive media-move-handle" style="padding-top: 5px" v-bind:src="media.data" />
+          </div>
+      </div>
+    </div>
+  </div>
+</script>
