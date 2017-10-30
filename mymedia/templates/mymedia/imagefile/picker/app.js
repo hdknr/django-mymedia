@@ -194,6 +194,7 @@ var Slide = Vue.extend({
   template: '#gallery-slide-template',
   data: function(){
     return {
+      callback: null,
       mediafiles: [],
       drag: null,
       dragenter: null
@@ -210,19 +211,16 @@ var Slide = Vue.extend({
        // swap postion
        this.mediafiles[this.drag] = this.mediafiles.splice(
           this.dragenter, 1, this.mediafiles[this.drag])[0];
+       this.callback();
      },
-      showSlide(mediafiles){
+      showSlide(mediafiles, callback){
           Vue.set(this, 'mediafiles', mediafiles);
-      },
-      moveFile(mediafile_id, position){
-          item = this.mediafiles.filter(item => item.id == mediafile_id);
-          arr = this.mediafiles.filter(item => item.id != mediafile_id);
-          arr.splice(position, 0, item[0]);
-          Vue.set(this, 'mediafiles', arr).slice(0);
+          Vue.set(this, 'callback', callback);
       },
       addFiles(mediafiles){
           var arr = this.mediafiles.concat(mediafiles);
           Vue.set(this, 'mediafiles', arr);
+          this.callback();
       }
   }
 });
@@ -242,8 +240,8 @@ var app = new Vue({
       getValues(){
           return Object.values(this.$refs.picker.selected_list);
       },
-      openSlide(mediafiles){
-        this.$refs.slide.showSlide(mediafiles);
+      openSlide(mediafiles, callback){
+        this.$refs.slide.showSlide(mediafiles, callback);
       },
       openPicker(count){
         $("#imagefile-picker").modal();
