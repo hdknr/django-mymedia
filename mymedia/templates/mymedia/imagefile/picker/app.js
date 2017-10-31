@@ -209,6 +209,10 @@ var Slide = Vue.extend({
          this.mediafiles.splice(this.drag, 1)[0]);
        this.callback(); },
 
+    removeFile(index){
+        this.mediafiles.splice(index, 1); 
+        this.callback(); },
+
     showSlide(mediafiles, callback){
         Vue.set(this, 'visible', true);
         Vue.set(this, 'mediafiles', mediafiles);

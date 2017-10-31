@@ -8,7 +8,11 @@
             @dragenter="on_dragenter(position, $event)"
             @dragend="on_drop($event)"
             draggable="true">
-            {[{ media.id }]}
+
+            <span class="btn btn-xs fa fa-trash"
+              data-toggle="tooltip" data-placement="top" title="{% trans 'Remove MediaFile' %}"
+              @click="removeFile(position)"></span>
+
             <img class="img-responsive media-move-handle" style="padding-top: 5px" v-bind:src="media.data" />
           </div>
       </div>
