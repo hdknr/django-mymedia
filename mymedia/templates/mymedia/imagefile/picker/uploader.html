@@ -1,60 +1,73 @@
-{% load bootstrap3 i18n %}
+{% load i18n staticfiles %}
 <script type="text/x-template" id="gallery-uploader-template">
-<div>
-    <!--UPLOAD-->
-    <form enctype="multipart/form-data" class="form form-horizontal" id="upload-form">
-      {% csrf_token %}
-      <h1>Upload Image File</h1>
+<div class="modal fade" id="imagefile-uploader" tabindex="-1" role="dialog" aria-labelledby="Image File Uploader" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div id="uploader_area">
+              <!--UPLOAD-->
+              <form enctype="multipart/form-data" class="form form-horizontal" id="upload-form">
+                {% csrf_token %}
+                <h1>Upload Image File</h1>
 
-      <div class="form-group">
-        <label for="id_access" class="col-md-2 control-label">Access</label>
-        <div class="col-md-9">
-          <select name="access" title="" id="id_access" class="form-control">
-            <option value="protected">Protected</option>
-            <option value="public">Public</option>
-          </select>
-        </div>
-      </div>
+                <div class="form-group">
+                  <label for="id_access" class="col-md-2 control-label">Access</label>
+                  <div class="col-md-9">
+                    <select name="access" title="" id="id_access" class="form-control">
+                      <option value="protected">Protected</option>
+                      <option value="public">Public</option>
+                    </select>
+                  </div>
+                </div>
 
-      <div class="form-group">
-        <label for="id_tags" class="col-md-2 control-label">Tags</label>
-        <div class="col-md-9">
-          <input type="text" name="tags" placeholder="Tags"  v-bind:value="tags"
-            title="A comma-separated list of tags." required="required" id="id_tags" class="form-control">
-          <div class="help-block">A comma-separated list of tags.</div>
-        </div>
-      </div>
+                <div class="form-group">
+                  <label for="id_tags" class="col-md-2 control-label">Tags</label>
+                  <div class="col-md-9">
+                    <input type="text" name="tags" placeholder="Tags"  v-bind:value="tags"
+                      title="A comma-separated list of tags." required="required" id="id_tags" class="form-control">
+                    <div class="help-block">A comma-separated list of tags.</div>
+                  </div>
+                </div>
 
-      <div class="form-group">
-        <label for="id_title" class="col-md-2 control-label">Title</label>
-        <div class="col-md-9">
-          <input type="text" name="title"  v-bind:value="names.title" maxlength="200" placeholder="Title" title="" id="id_title" class="form-control">
-        </div>
-      </div>
+                <div class="form-group">
+                  <label for="id_title" class="col-md-2 control-label">Title</label>
+                  <div class="col-md-9">
+                    <input type="text" name="title"  v-bind:value="names.title" maxlength="200" placeholder="Title" title="" id="id_title" class="form-control">
+                  </div>
+                </div>
 
-      <div class="form-group">
-        <label for="id_filename" class="col-md-2 control-label">Filename</label>
-        <div class="col-md-9">
-          <input type="text" name="filename" v-bind:value="names.filename" maxlength="200" placeholder="Filename" title="" id="id_filename" class="form-control">
-        </div>
-      </div>
+                <div class="form-group">
+                  <label for="id_filename" class="col-md-2 control-label">Filename</label>
+                  <div class="col-md-9">
+                    <input type="text" name="filename" v-bind:value="names.filename" maxlength="200" placeholder="Filename" title="" id="id_filename" class="form-control">
+                  </div>
+                </div>
 
-      <div class="form-group">
-        <label for="id_data" class="col-md-2 control-label">Data</label>
-        <div class="col-md-9">
-          <div class="row bootstrap3-multi-input">
-            <div class="col-xs-6">
-              <input type="file" name="data" title="" required="required" id="id_data" @change="onFileChanged">
-            </div>
-            <div class="col-xs-4" v-if="image">
-                <img class="upload-preview" :src="image.thumnail">
-            </div>
-            <div class="col-xs-2" v-if="image">
-                <span class="btn btn-primary" @click="uploadImage">{% trans 'Upload' %}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
+                <div class="form-group">
+                  <label for="id_data" class="col-md-2 control-label">Data</label>
+                  <div class="col-md-9">
+                    <div class="row bootstrap3-multi-input">
+                      <div class="col-xs-6">
+                        <input type="file" name="data" title="" required="required" id="id_data" @change="onFileChanged">
+                      </div>
+
+                      <div class="col-xs-4">
+                          <img class="upload-preview" v-bind:src="image.thumbnail" v-if="image">
+                          <img class="upload-preview" v-bind:src="instance.data" v-else-if="instance">
+                          <span v-if="image">{% trans 'New Image' %}</span>
+                          <span v-else-if="instance">{% trans 'Current Image' %}</span>
+                      </div>
+
+                      <div class="col-xs-2">
+                          <span class="btn btn-primary" @click="uploadImage">{% trans 'Upload' %}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+        </div><!-- /#uploader_area -->
+      </div><!--/.modal-body-->
+    </div><!-- /.modal-content -->
+  </div>
 </div>
 </script>

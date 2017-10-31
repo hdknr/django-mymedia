@@ -1,6 +1,7 @@
 # coding: utf-8
 from django.contrib.staticfiles.storage import staticfiles_storage
 from . import images
+from . import encoders
 import os
 
 
@@ -62,9 +63,20 @@ class ThumbnailProfile(object):
 
 class Album(object):
     def update_files(self, file_list):
-        dels = set(self.files.all()) - set(file_list)
-        self.albumfile_set.filter(mediafile__in=list(dels)).delete()
+        dels = set(i.id for i in self.files.all()) - set(file_list)
+        self.albumfile_set.filter(mediafile_id__in=list(dels)).delete()
         for i in file_list:
-            mf, created = self.albumfile_set.get_or_create(mediafile=i)
+            mf, created = self.albumfile_set.get_or_create(mediafile_id=i)
             mf.order = file_list.index(i) + 1
+            print("update_files", i, mf.order)
             mf.save()
+
+    @property
+    def files_in_order(self):
+        return [i.mediafile for i in self.albumfile_set.all()]
+
+    @property
+    def files_in_json(self):
+        from .serializers import MediaFileSerializer
+        return encoders.BaseObjectEncoder.to_json(
+            MediaFileSerializer(self.files_in_order, many=True).data)

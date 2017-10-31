@@ -1,7 +1,7 @@
 {# vue app #}
 {% load i18n staticfiles %}
 <script type="text/x-template" id="gallery-picker-template">
-
+<div> {# this container is required to hold gallery-uploader as componenet inside #}
 <div class="modal fade" id="imagefile-picker" tabindex="-1" role="dialog" aria-labelledby="Image File Picker" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -13,7 +13,7 @@
         </ul>
 
         <div class="tab-content">
-        <div id="main_area" class="tab-pane fade in active">
+          <div id="main_area" class="tab-pane fade in active">
           <!-- Slider -->
           <div class="row">
 
@@ -93,17 +93,7 @@
   </div>
 </div>
 
+  <gallery-uploader ref="gallery_uploader"  @on-reset-form="get_images_page"></gallery-uploader>
 
-<div class="modal fade" id="imagefile-uploader" tabindex="-1" role="dialog" aria-labelledby="Image File Uploader" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-body">
-        <div id="uploader_area">
-          <gallery-uploader ref="gallery_uploader" v-bind:instance="instance" @on-reset-form="get_images_page"></gallery-uploader>
-        </div><!-- /#main_area -->
-      </div><!--/.modal-body-->
-    </div><!-- /.modal-content -->
-  </div>
-</div>
-
+</div>{# this container is required to hold gallery-uploader as componenet inside #}
 </script>

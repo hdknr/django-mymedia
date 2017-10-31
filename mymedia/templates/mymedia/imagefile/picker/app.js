@@ -12,8 +12,21 @@ var Selection = Vue.extend({
 });
 
 var Uploader = Vue.extend({
-   props: ['instance'],
+   props: [], template: '#gallery-uploader-template',
+   mounted(){
+     var vm = this;
+     $("#imagefile-uploader")
+      .off('hidden.bs.modal')
+      .on('hidden.bs.modal', function(){
+          Vue.set(vm, 'instance',  null);
+          Vue.set(vm, 'image', null);
+          Vue.set(vm, 'tags', '');
+          Vue.set(vm, 'names', {title: '', filename: ''});
+          $("#upload-form input").val('');
+      });
+   },
    data: function(){return {
+      instance: null,
       names: {title: '', filename: ''},
       tags: '',
       access: '',
@@ -27,30 +40,30 @@ var Uploader = Vue.extend({
       }
    },
    methods: {
-      test(){
-            console.log("gallery-uploader test method called");
+      editForm(instance){
+          Vue.set(this, 'instance', instance);
+          this.names.title = instance.title;
+          this.names.filename = instance.filename;
+          this.tags = instance.tags;
+          this.access = instance.access;
+          $("#imagefile-uploader").modal('show');
       },
       resetForm(created){
-          Vue.set(this, 'image', null);
-          Vue.set(this, 'names', {title: '', filename: ''});
-          $("#upload-form input").val('');
           $("#imagefile-uploader").modal('hide');
           var p = created ? 1 : null;   // null := current
           this.$emit('on-reset-form', p);
       },
       uploadImage(){
+          var vm = this;
           var config = {headers: {'content-type': 'multipart/form-data'}};
           var data = new FormData($("#upload-form").get(0));
           var tags = data.get('tags');
           if(tags)    // tags must be JSON list
               data.set('tags', JSON.stringify(tags.split(',').map((i)=>i.trim())))
-          var vm = this;
-
           var file_data = data.getAll("data");
           if(file_data && file_data[0].size < 1){
               data.delete('data');
           }
-
           axios.defaults.xsrfCookieName = 'csrftoken';
           axios.defaults.xsrfHeaderName = 'X-CSRFToken';
           var method = vm.instance ? 'patch' : 'post';
@@ -67,7 +80,7 @@ var Uploader = Vue.extend({
          var reader = new FileReader();
          reader.onload = function(e) {
             var img = {
-                thumnail: e.target.result, uploadFile: file, name: file.name};
+                thumbnail: e.target.result, uploadFile: file, name: file.name};
              Vue.set(vm, 'image', img);
          };
          reader.readAsDataURL(file);
@@ -82,43 +95,24 @@ var Uploader = Vue.extend({
             .then((res)=>{ Vue.set(this, 'names', res.data); });
       }
    },
-   mounted(){
-     var vm = this;
-     $("#app").on({
-        'shown.bs.modal': function(){
-            if(vm.instance){
-                Vue.set(vm, 'names', {title: vm.instance.title, filename: vm.instance.filename});
-                Vue.set(vm, 'image', {thumnail: vm.instance.data});
-                Vue.set(vm, 'tags', vm.instance.tags.join(','));
-                Vue.set(vm, 'access', vm.instance.access);
-            }
-        },
-        'hidden.bs.modal': function(){
-            Vue.set(vm, 'image', null);
-            Vue.set(vm, 'names', {title:'', filename:''});
-            $("#upload-form")[0].reset();
-            vm.instance = null;
-        }
-      }, "#imagefile-uploader");
-   },
-   template: '#gallery-uploader-template'
 });
 
 var Picker = Vue.extend({
   template: '#gallery-picker-template',
+  mounted(){ console.log('picker mounted');},
   data: function(){
     return {
       selected_list: {},        // selected MediaFiles
       max_selection:1,
-      instance: null,
+      //instance: null,
       images: {}
     };
   },
   components: {
+   'gallery-uploader': Uploader,
    'gallery-thumbnail': Thumbnail,
    'gallery-carousel': Carousel,
-   'gallery-selection': Selection,
-   'gallery-uploader': Uploader
+   'gallery-selection': Selection
   },
   computed: {
       last_page : function(){
@@ -164,11 +158,12 @@ var Picker = Vue.extend({
         });
       },
       edit_image: function(image_id){
+          // Edit existing MediaFile(image_id) with Uploader
           var url = "{% url 'mymedia_api:imagefile-detail' pk='___' %}".replace('___', image_id);
           var vm = this;
           return axios.get(url).then((res) =>{
-              Vue.set(this, 'instance', res.data);
-              $("#imagefile-uploader").modal('show');
+              // Vue.set(vm, 'instance', res.data);
+              this.$refs.gallery_uploader.editForm(res.data);
               //this.$emit('GET_AJAX_COMPLETE');
           });
       },
@@ -194,34 +189,35 @@ var Slide = Vue.extend({
   template: '#gallery-slide-template',
   data: function(){
     return {
-      callback: null,
+      visible: false,
+      callback: function(){},
       mediafiles: [],
       drag: null,
       dragenter: null
     };
   },
   methods: {
-    on_dragstart(mediafile,e) {
-       Vue.set(this, 'drag', mediafile);
-     },
+     on_dragstart(mediafile,e) {
+       Vue.set(this, 'drag', mediafile); },
+
      on_dragenter(mediafile, e){
-       Vue.set(this, 'dragenter', mediafile);
-     },
+       Vue.set(this, 'dragenter', mediafile); },
+
      on_drop(e) {
-       // swap postion
-       this.mediafiles[this.drag] = this.mediafiles.splice(
-          this.dragenter, 1, this.mediafiles[this.drag])[0];
-       this.callback();
-     },
-      showSlide(mediafiles, callback){
-          Vue.set(this, 'mediafiles', mediafiles);
-          Vue.set(this, 'callback', callback);
-      },
-      addFiles(mediafiles){
-          var arr = this.mediafiles.concat(mediafiles);
-          Vue.set(this, 'mediafiles', arr);
-          this.callback();
-      }
+       this.mediafiles.splice(
+         this.dragenter, 0,
+         this.mediafiles.splice(this.drag, 1)[0]);
+       this.callback(); },
+
+    showSlide(mediafiles, callback){
+        Vue.set(this, 'visible', true);
+        Vue.set(this, 'mediafiles', mediafiles);
+        if(callback) Vue.set(this, 'callback', callback); },
+
+    addFiles(mediafiles){
+        var arr = this.mediafiles.concat(mediafiles);
+        Vue.set(this, 'mediafiles', arr);
+        this.callback(); }
   }
 });
 

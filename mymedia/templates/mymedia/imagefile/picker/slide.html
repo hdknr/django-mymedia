@@ -1,6 +1,6 @@
 {% load bootstrap3 i18n %}
 <script type="text/x-template" id="gallery-slide-template">
-  <div class="container" >
+  <div class="container" v-show="visible" >
     <div class="row">
       <div class="col-md-12" id="slide-container">
           <div class="col-md-2" v-for="(media, position) in mediafiles" v-bind:mediafile-id="media.id"
