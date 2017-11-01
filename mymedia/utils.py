@@ -29,12 +29,12 @@ def find_tags(template_name, node_name):
 def find_blocks(template_name):
     def _finds(nodes):
         for n in nodes:
-            if isinstance(n, BlockNode):
-                yield n
-            elif isinstance(n, ExtendsNode) and \
+            if isinstance(n, ExtendsNode) and \
                     isinstance(n.parent_name.var, str):
                 yield from _finds(get_template(n.parent_name.var).template)
             else:
+                if isinstance(n, BlockNode):
+                    yield n
                 for i in n.child_nodelists:
                     yield from _finds(getattr(n, i, []))
 
