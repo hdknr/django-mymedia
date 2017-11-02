@@ -94,15 +94,6 @@ class Thumbnail(defs.Thumbnail):
         verbose_name = _('Thumbnail')
         verbose_name_plural = _('Thumbnails')
 
-class Album(defs.Album):
-
-    class Meta:
-        verbose_name = _('Album')
-        verbose_name_plural = _('Albums')
-
-    def __str__(self):
-        return self.title
-
 
 class Album(defs.Album, methods.Album):
     owner = models.ForeignKey(User)
