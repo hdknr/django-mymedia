@@ -32,7 +32,7 @@
                   <div class="col-xs-12" id="slider">
                       <!-- Top part of the slider -->
                       <div class="row">
-                          <div class="col-sm-12" id="carousel-bounding-box">
+                          <div class="col-sm-12" id="carousel-bounding-box" v-if="has_results">
                               <div class="carousel slide" id="myCarousel">
                                   <!-- Carousel items -->
                                   <div class="carousel-inner">
@@ -52,19 +52,25 @@
                                   </a>
                               </div>
                           </div>
+                          <div class="col-sm-12" id="carousel-bounding-box" v-else>
+                              {% trans 'No media files' %}
+                           </div>
                       </div>
                   </div>
               </div>
           </div>
           <div class="row">
-            <div class="col-sm-8">
+
+            <div class="col-sm-8" v-if="has_results">
               <button class="btn btn-primary" v-if="images.previous" v-on:click="get_next_page(-1)">Previous</button>
               <button class="btn" v-bind:class="buttonClass(i)"  v-for="i in images.page_range" v-on:click="get_images_page(i)"> {[{ i}]} </button>
               <button class="btn btn-primary" v-if="images.next" v-on:click="get_next_page(1)">Next</button>
             </div>
+            <div class="col-sm-8" v-else><!-- no images --></div>
+
 
             <div class="col-sm-4">
-              <div class="btn-group" role="group" aria-label="Basic example">
+              <div class="btn-group" role="group" aria-label="Upload">
                 <button class="btn btn-primary" data-toggle="modal" data-target="#imagefile-uploader">
                   {% trans 'Upload...' %}</button>
                 <!--

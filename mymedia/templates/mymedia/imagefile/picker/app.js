@@ -115,6 +115,9 @@ var Picker = Vue.extend({
    'gallery-selection': Selection
   },
   computed: {
+      has_results(){
+          return this.images.results != null && this.images.results.length > 0;
+      },
       last_page : function(){
           return this.images.page_range[this.images.page_range.length - 1]
       }
@@ -210,7 +213,7 @@ var Slide = Vue.extend({
        this.callback(); },
 
     removeFile(index){
-        this.mediafiles.splice(index, 1); 
+        this.mediafiles.splice(index, 1);
         this.callback(); },
 
     showSlide(mediafiles, callback){
