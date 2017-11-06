@@ -180,6 +180,7 @@ var Picker = Vue.extend({
         }
         Vue.set(this, 'selected_list', Object.assign({}, this.selected_list));
         if(Object.keys(this.selected_list).length >= this.max_selection){
+            console.log(this.selected_list);
             $('#imagefile-picker').modal('hide');
         }
       }
@@ -235,7 +236,7 @@ var app = new Vue({
   },
   computed: {
       selected_list(){
-          this.$refs.picker.selected_list;
+          return this.$refs.picker.selected_list;
       }
   },
   methods:  {
