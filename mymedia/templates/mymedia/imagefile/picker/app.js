@@ -236,7 +236,7 @@ var app = new Vue({
   },
   computed: {
       selected_list(){
-          return this.$refs.picker.selected_list;
+          return   this.$refs.picker.selected_list;
       }
   },
   methods:  {
