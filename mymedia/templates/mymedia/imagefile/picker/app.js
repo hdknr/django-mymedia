@@ -99,7 +99,6 @@ var Uploader = Vue.extend({
 
 var Picker = Vue.extend({
   template: '#gallery-picker-template',
-  mounted(){ console.log('picker mounted');},
   data: function(){
     return {
       selected_list: {},        // selected MediaFiles
@@ -124,7 +123,6 @@ var Picker = Vue.extend({
   },
   methods:  {
       resetPicker(max_selection){
-          console.log("resetPicker");
           Vue.set(this, 'max_selection',
             (max_selection == undefined) ? 1 : this.max_selection = max_selection);
           Vue.set(this, 'selected_list', {});
@@ -172,8 +170,9 @@ var Picker = Vue.extend({
       },
       select_image: function(image){
         if(image.selected){
-          this.selected_list[image.id] = Object.assign({}, image);
-        }else {
+          var clone = Object.assign({}, image);
+          this.selected_list[image.id] = clone;
+        }else { // unselected
           delete this.selected_list[image.id];
           this.images.results.filter(
             function(e, i, a){return (e.id == image.id);})

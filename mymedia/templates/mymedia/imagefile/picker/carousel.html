@@ -5,7 +5,7 @@
       <img v-bind:src="image.data" v-bind:image_id="image.id" @click="$emit('on-edit', image.id)">
 
       <div class="checkbox checkbox-info checkbox-circle">
-        <input type="checkbox" @click="$emit('on-select', image)" v-model="image.selected">
+        <input type="checkbox" @change="$emit('on-select', image)" v-model="image.selected">
         <label>{% trans 'Check to select Madia File' %}</label>
       </div>
   </div>
