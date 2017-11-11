@@ -1,10 +1,8 @@
 {% load bootstrap3 i18n %}
 <script type="text/x-template" id="gallery-slide-template">
   <div class="container" v-show="visible" >
-    <div class="row">
 
-      <div class="col-md-12" id="slide-container" v-if="mediafiles.length > 0">
-
+      <div class="row" id="slide-container" v-if="mediafiles.length > 0">
           <div class="col-md-2" v-for="(media, position) in mediafiles" v-bind:mediafile-id="media.id"
             @dragstart="on_dragstart(position, $event)"
             @dragenter="on_dragenter(position, $event)"
@@ -15,11 +13,12 @@
               data-toggle="tooltip" data-placement="top" title="{% trans 'Remove MediaFile' %}"
               @click="removeFile(position)"></span>
 
-            <img class="img-responsive media-move-handle" style="padding-top: 5px" v-bind:src="media.data" />
+            <img width="120px" class="img-responsive media-move-handle" style="padding-top: 5px" v-bind:src="media.data" />
           </div>
+        </div>
       </div>
-      <div class="col-md-12" id="slide-container" v-else>
 
+      <div class="row" id="slide-container" v-else>
           {% trans 'No Media Files selected' %}
       </div>
 
