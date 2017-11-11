@@ -2,7 +2,9 @@
 <script type="text/x-template" id="gallery-slide-template">
   <div class="container" v-show="visible" >
     <div class="row">
+
       <div class="col-md-12" id="slide-container" v-if="mediafiles.length > 0">
+
           <div class="col-md-2" v-for="(media, position) in mediafiles" v-bind:mediafile-id="media.id"
             @dragstart="on_dragstart(position, $event)"
             @dragenter="on_dragenter(position, $event)"
@@ -17,8 +19,10 @@
           </div>
       </div>
       <div class="col-md-12" id="slide-container" v-else>
-        {% trans 'No MediaFIle is selected' %}
+
+          {% trans 'No Media Files selected' %}
       </div>
+
     </div>
   </div>
 </script>

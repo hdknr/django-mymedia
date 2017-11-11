@@ -9,8 +9,17 @@ from mptt.forms import TreeNodeChoiceField
 from . import models, forms
 
 
-class ThumbnailAdminInline(admin. TabularInline):
+class ThumbnailAdminInline(admin.TabularInline):
     model = models.Thumbnail
+
+    def image_tag(self, obj):
+        if obj.data:
+            return format_html('<img src="{}" width="100px"/>'.format(
+                obj.data.url))
+    image_tag.short_description = 'Image'
+
+    extra = 1
+    readonly_fields = ['image_tag', ]
 
 
 @admin.register(models.MediaFile)
@@ -23,6 +32,7 @@ class MediaFileAdmin(admin.ModelAdmin):
 
     list_display = ['id', 'image_tag', 'data', 'access', 'owner', 'media_type', ]
     inlines = [ThumbnailAdminInline]
+    readonly_fields = ['image_tag', ]
 
 
 @admin.register(models.ImageMeta)
