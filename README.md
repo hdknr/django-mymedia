@@ -1,5 +1,6 @@
 # django-mymedia
 
+- Bootstrap3
 - protected media file management
 
 
