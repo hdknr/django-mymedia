@@ -1,5 +1,6 @@
 # django-mymedia
 
+- Bootstrap4 and bootstrap-vue
 - protected media file management
 
 
