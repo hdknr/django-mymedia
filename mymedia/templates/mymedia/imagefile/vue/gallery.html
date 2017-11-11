@@ -1,0 +1,14 @@
+<script type="text/x-template" id="imagefile-gallery-template">
+
+  <b-modal id="galleryDialog" ref="dialog" v-model='modalState' size="lg" title="Gallery" @show="onShow">
+    <b-container fluid class="p-4 bg-dark" style="overflow-x:scroll;white-space: nowrap;" @scroll="onScrolled">
+
+        <b-col v-for="(i, index) in images">
+          <b-img thumbnail fluid :src="i.data" alt="Thumbnail" width="100"></b-img>
+          <br>
+          <b-checkbox @change="$emit('on-select', i, !i.selected)" v-model="i.selected"></b-checkbox>
+        </b-col>
+
+    </b-container>
+  </b-modal>
+</script>
