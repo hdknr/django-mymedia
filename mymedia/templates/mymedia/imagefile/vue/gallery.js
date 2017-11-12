@@ -3,6 +3,7 @@ var Gallery = Vue.extend({
     props: ['modalState', ], template: '#imagefile-gallery-template',
     data(){
         return{
+            current: null,
             selected_list: {},
             response: null,
             images: []
@@ -17,6 +18,14 @@ var Gallery = Vue.extend({
        }
     },
     methods: {
+      setId(prefix, id){
+          return prefix + "-" +id;
+      },
+      preview(image){
+          this.current = image;
+          this.$refs.preview.show();
+          console.log("xxxxxxx");
+      },
       onShow(){
           this.images.forEach(function(i){i.selected = false;});
       },
