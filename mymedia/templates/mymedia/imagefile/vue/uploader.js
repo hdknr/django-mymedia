@@ -49,7 +49,6 @@ var Uploader = Vue.extend({
         if (!this.instance.data) {
             console.log("no data");
         } else {
-            console.log("uploadFile", this.instance);
             this.uploadInstance();
         }
       },

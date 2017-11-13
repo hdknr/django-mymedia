@@ -1,6 +1,9 @@
+{% load i18n %}
 <script type="text/x-template" id="imagefile-gallery-template">
 
-  <b-modal id="galleryDialog" ref="dialog" v-model='modalState' size="lg" title="Gallery" @show="onShow">
+  <b-modal id="galleryDialog" ref="dialog" v-model='modalState' size="lg" title="Gallery"
+    @hide="onHiding" @show="onShow">
+
     <b-container fluid class="p-4 bg-dark" style="overflow-x:scroll;white-space: nowrap;" @scroll="onScrolled">
 
         <b-col v-for="(i, index) in images">
@@ -18,5 +21,9 @@
 
     </b-container>
 
+    <div slot="modal-footer" class="w-100">
+      <b-btn size="sm" variant="primary" @click="onUpload"> {% trans 'Upload...' %} </b-btn>
+      <b-btn size="sm" class="float-right" variant="primary" @click="modalState=false"> {% trans 'Close' %} </b-btn>
+    </div>
   </b-modal>
 </script>

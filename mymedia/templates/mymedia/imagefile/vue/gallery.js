@@ -3,6 +3,7 @@ var Gallery = Vue.extend({
     props: ['modalState', ], template: '#imagefile-gallery-template',
     data(){
         return{
+            hideGate: false,
             current: null,
             selected_list: {},
             response: null,
@@ -13,7 +14,7 @@ var Gallery = Vue.extend({
         this.getNextPage();
     },
     computed: {
-       endpoint: function(){
+       endpoint(){
            return "{% url 'mymedia_api:imagefile-list' %}";
        }
     },
@@ -21,13 +22,18 @@ var Gallery = Vue.extend({
       setId(prefix, id){
           return prefix + "-" +id;
       },
-      preview(image){
-          this.current = image;
-          this.$refs.preview.show();
-          console.log("xxxxxxx");
-      },
       onShow(){
           this.images.forEach(function(i){i.selected = false;});
+      },
+      onHiding(evt){
+        if(this.hideGate){
+            evt.preventDefault();
+            this.hideGate = false;
+        }
+      },
+      onUpload(evt){
+        this.hideGate = true;
+        this.$emit('on-upload');
       },
       getPageUrl(page){
         if (page == null || page == undefined)
