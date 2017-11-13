@@ -1,0 +1,56 @@
+<script type="text/x-template" id="imagefile-uploader-template">
+  <b-modal id="uploaderDialog" ref="dialog" v-model='modalState' size="lg" title="Uploader"
+    @show="onShow" @ok="uploadFile">
+
+    <b-container>
+    <b-row>
+      <b-col sm="4">
+      <b-form-group id="accessOption" description="Access" label="Access">
+        <b-form-radio-group
+          v-model="instance.access" :options="access_options" size="sm" name="radiosSm">
+        </b-form-radio-group>
+      </b-form-group>
+    </b-col>
+
+      <b-col sm="8">
+      <b-form-group id="fileTags" description="File Tags" label="File Tags">
+        <b-form-input v-model="instance.tags" type="text" placeholder="Tags"></b-form-input>
+      </b-form-group>
+    </b-col>
+    </b-row>
+
+    <b-row>
+      <b-col sm="6">
+        <b-form-group id="fileData" description="File" label="File">
+          <b-form-file v-model="instance.data" type="text" placeholder="File" @change="onFileChanged"></b-form-file>
+        </b-form-group>
+      </b-col>
+
+      <b-col sm="6" class="text-center">
+        <b-img :id="setId('upload-preview', '0')" :src="image.thumbnail" alt="Fluid image" height="80px" v-if="image" />
+        <b-popover :target="setId('upload-preview', '0')" triggers="hover focus" >
+           <template slot="title">Preview
+            <b-img :src="image.thumbnail" fluid></b-img>
+          </template>
+        </b-popover>
+      </b-col>
+    </b-row>
+
+
+    <b-row>
+      <b-col sm="6">
+        <b-form-group id="fileTitle" description="File Title" label="File Title">
+          <b-form-input v-model="instance.title" type="text" placeholder="Title"></b-form-input>
+        </b-form-group>
+      </b-col>
+
+      <b-col sm="6">
+        <b-form-group id="fileFilename" description="File Name" label="File Name">
+          <b-form-input v-model="instance.filename" type="text" placeholder="Filename"></b-form-input>
+        </b-form-group>
+      </b-col>
+    </b-row>
+  </b-container>
+
+  </b-modal>
+</script>
