@@ -3,6 +3,7 @@ var Uploader = Vue.extend({
     props: ['modalState'], template: '#imagefile-uploader-template',
     data(){
         return{
+          oiginal: {},
           instance: {},
           image: {},
           access_options: [
@@ -15,29 +16,51 @@ var Uploader = Vue.extend({
     },
     computed: {
        endpoint(){
-           return "{% url 'mymedia_api:imagefile-list' %}";
+           if(this.instance.id){
+             return "{% url 'mymedia_api:imagefile-detail' pk='___' %}".replace('___', this.instance.id); }
+           else {return "{% url 'mymedia_api:imagefile-list' %}"; }
        },
        tags_json(){
+         try{
             return JSON.stringify(
-                this.instance.tags.split(',').map((i)=>i.trim()) );
+                  this.instance.tags.split(',').map((i)=>i.trim()) );
+          }catch(e) {
+            return '[""]'
+          }
        },
        uploadData(){
+         var vm = this;
          var formData = new FormData();
-         for(var attr in this.instance){
-           var val = this.instance[attr];
-           if(val){
-              formData.append(attr, (attr=='tags') ? this.tags_json : val);
-           }
-         }
+         ['access', 'data', 'tags', 'filename', 'title'].forEach((i) => {
+            val = vm.instance[i];
+            if (vm.instance.id){ //Update
+              if(vm.original[i] != val){
+                  formData.append( i,  (i == 'tags') ? vm.tags_json : val);
+              }
+            }else { // New
+              formData.append(i,  (i == 'tags') ? vm.tags_json : val);
+            }
+          });
+          console.log(formData);
          return formData;
+       },
+       currentImage(){
+          if(this.image.thumbnail)
+            return this.image.thumbnail;
+          if(this.instance.id)
+            return this.instance.data;
        }
     },
     methods: {
       setId(prefix, id){
           return prefix + "-" +id;
       },
-      onShow(){
-          this.resetForm();
+      onHidden(){
+        this.resetForm();
+      },
+      setOriginal(original){
+          this.original = original;
+          this.instance = Object.assign({}, original);
       },
       resetForm(){
           // TODO: clear form
@@ -79,10 +102,11 @@ var Uploader = Vue.extend({
       uploadInstance(){
           var vm = this;
           var config = {headers: {'content-type': 'multipart/form-data'}};
-          var data = this.uploadData;
+          var data = vm.uploadData;
           axios.defaults.xsrfCookieName = 'csrftoken';
           axios.defaults.xsrfHeaderName = 'X-CSRFToken';
           var method = vm.instance.id ? 'patch' : 'post';
+          console.log("uploadInstance:...", method, data)
           axios[method](vm.endpoint, data, config)
             .then(function(res) {vm.$refs.dialog.hide(); })
             .catch(function(error){console.log(error.response); });

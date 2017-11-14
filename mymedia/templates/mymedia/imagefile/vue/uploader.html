@@ -1,6 +1,6 @@
 <script type="text/x-template" id="imagefile-uploader-template">
   <b-modal id="uploaderDialog" ref="dialog" v-model='modalState' size="lg" title="Uploader"
-    @show="onShow" @ok="uploadFile">
+    @hidden="onHidden" @ok="uploadFile">
 
     <b-container>
     <b-row>
@@ -27,12 +27,15 @@
       </b-col>
 
       <b-col sm="6" class="text-center">
-        <b-img :id="setId('upload-preview', '0')" :src="image.thumbnail" alt="Fluid image" height="80px" v-if="image" />
+
+        <b-img :id="setId('upload-preview', '0')" :src="currentImage" alt="Fluid image" height="80px" />
+
         <b-popover :target="setId('upload-preview', '0')" triggers="hover focus" >
            <template slot="title">Preview
-            <b-img :src="image.thumbnail" fluid></b-img>
+            <b-img :src="currentImage" fluid></b-img>
           </template>
         </b-popover>
+
       </b-col>
     </b-row>
 

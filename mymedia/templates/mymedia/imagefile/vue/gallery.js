@@ -32,8 +32,12 @@ var Gallery = Vue.extend({
         }
       },
       onUpload(evt){
-        this.hideGate = true;
+        //this.hideGate = true;
         this.$emit('on-upload');
+      },
+      onEditImage(image, evt){
+        //this.hideGate = true;
+        this.$emit('on-upload', image);
       },
       getPageUrl(page){
         if (page == null || page == undefined)
