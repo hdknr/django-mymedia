@@ -14,9 +14,8 @@ def mediafile_form():
 
 @register.filter
 def thumbnail_url(media, profile='default'):
-    tp = models.ThumbnailProfile.objects.filter(name=profile).first()
-    tp_media = tp and tp.get_thumbnail_for(media)
-    return tp_media and tp_media.data.url
+    t = media.thumbnail_for(profile)
+    return t and t.data.url
 
 
 @register.simple_tag(takes_context=True)

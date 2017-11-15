@@ -62,6 +62,15 @@ class MediaFile(defs.MediaFile, methods.MediaFile):
     objects = querysets.MediaFileQuerySet.as_manager()
     tags = TaggableManager()
 
+    def thumbnail_for(self, profile=None):
+        tp = ThumbnailProfile.objects.filter(name=profile).first()
+        return tp and tp.get_thumbnail_for(self)
+
+    def all_thumbnails(self):
+        for profile in ThumbnailProfile.objects.all():
+            profile.get_thumbnail_for(self)
+        return self.thumbnail_set.all()
+
 
 class ImageMeta(defs.ImageMeta):
     image = models.OneToOneField(MediaFile)

@@ -2,6 +2,7 @@
 from django.contrib import admin
 from django.utils.safestring import SafeString as _S
 from django.utils.html import format_html
+from django.template import Template, Context
 from ordered_model.admin import OrderedModelAdmin
 from ordered_model.admin import OrderedTabularInline
 from mptt.admin import MPTTModelAdmin
@@ -24,10 +25,17 @@ class ThumbnailAdminInline(admin.TabularInline):
 
 @admin.register(models.MediaFile)
 class MediaFileAdmin(admin.ModelAdmin):
+
+    _template = Template('''
+        <img src="{{ i.data.url }}" width="100px"/>
+        <br/>
+        {{ i.imagemeta.info}}
+    ''')
+
     def image_tag(self, obj):
-        if hasattr(obj, 'imagemeta'):
-            return format_html('<img src="{}" width="100px"/>'.format(
-                obj.data.url))
+        if obj.data:
+            return self._template.render(context=Context({'i': obj}))
+
     image_tag.short_description = 'Image'
 
     list_display = ['id', 'image_tag', 'data', 'access', 'owner', 'media_type', ]
