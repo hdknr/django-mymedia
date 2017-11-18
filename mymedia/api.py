@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from . import views, viewsets
 
 router = DefaultRouter()
+router.register(r'openmediafiles', viewsets.OpenMediaFileViewSet, base_name='open/mediafile')
 router.register(r'mediafiles', viewsets.MediaFileViewSet, base_name='mediafile')
 router.register(r'imagefiles', viewsets.ImageFileViewSet, base_name='imagefile')
 router.register(r'albums', viewsets.AlbumViewSet, base_name='album')

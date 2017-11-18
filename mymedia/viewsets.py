@@ -42,6 +42,14 @@ class ImageFileViewSet(MediaFileViewSet):
         return self.request.user.mediafile_set.filter_image()
 
 
+class OpenMediaFileViewSet(viewsets.ModelViewSet):
+
+    queryset = models.MediaFile.objects.all()
+    serializer_class = serializers.OpenMediaFileSerializer
+    filter_class = filters.MediaFileFilter
+    pagination_class = Pagination
+
+
 class AlbumViewSet(viewsets.ModelViewSet):
     queryset = models.Album.objects.all()
     serializer_class = serializers.AlbumSerializer
