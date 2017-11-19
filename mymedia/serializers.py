@@ -69,6 +69,7 @@ class AlbumSerializer(serializers.ModelSerializer):
 
 class AlbumFileSerializer(serializers.ModelSerializer):
     mediafile = MediaFileSerializer(many=False)
+    new_order = serializers.IntegerField(required=False)
 
     class Meta:
         model = models.AlbumFile
@@ -84,5 +85,12 @@ class AlbumFileSerializer(serializers.ModelSerializer):
         return res
 
     def update(self, instance, validated_data):
+        mediafile = validated_data.pop('mediafile', None)
+        ser = mediafile and MediaFileSerializer(
+            instance.mediafile, data=mediafile, context=self.context)
+        ser and ser.is_valid() and ser.save()
         result = super(AlbumFileSerializer, self).update(instance, validated_data)
+        new_order = validated_data.get('new_order', None)
+        if new_order:
+            instance.to(new_order)
         return result
