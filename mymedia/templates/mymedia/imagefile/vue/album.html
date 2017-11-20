@@ -1,0 +1,29 @@
+{% load bootstrap3 i18n %}
+<script type="text/x-template" id="mymedia-album-template">
+  <b-container fluid  v-show="modalState">
+
+      <b-row id="slide-container" v-if="mediafiles.length > 0">
+        <b-col cols="2"
+            v-for="(media, position) in mediafiles"
+            v-bind:mediafile-id="media.id"
+            @dragstart="on_dragstart(position, $event)"
+            @dragenter="on_dragenter(position, $event)"
+            @dragend="on_drop($event)"
+            draggable="true">
+
+            <span class="btn btn-xs fa fa-trash"
+              data-toggle="tooltip" data-placement="top"
+              title="{% trans 'Remove MediaFile' %}"
+              @click="removeFile(position)"></span>
+
+            <b-img width="120px" class="media-move-handle"
+              style="padding-top: 5px" v-bind:src="media.data" ></b-img>
+        </b-col>
+      </b-row>
+
+      <b-row  id="slide-container" v-else>
+          {% trans 'No Media Files selected' %}
+      </b-row>
+
+  </b-container>
+</script>

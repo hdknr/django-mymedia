@@ -63,12 +63,13 @@ class ThumbnailProfile(object):
 
 class Album(object):
     def update_files(self, file_list):
+        print(file_list)
         dels = set(i.id for i in self.files.all()) - set(file_list)
         self.albumfile_set.filter(mediafile_id__in=list(dels)).delete()
         for i in file_list:
-            mf, created = self.albumfile_set.get_or_create(mediafile_id=i)
+            mf = self.albumfile_set.filter(mediafile_id=i).first()
+            mf = mf or self.albumfile_set.create(mediafile_id=i)
             mf.order = file_list.index(i) + 1
-            print("update_files", i, mf.order)
             mf.save()
 
     @property

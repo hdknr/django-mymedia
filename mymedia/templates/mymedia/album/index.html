@@ -1,0 +1,151 @@
+{% extends 'mymedia/base.html' %}
+{% load i18n mymediatags %}
+
+{% block mymedia_content %}
+<div style="height:100px"></div>
+<div id=app>
+
+  <b-container fluid >
+    <b-card v-for="(album, index) in albums" v-if="album.mediafiles[0]" class="my-3 row">
+
+      <b-card-header header-bg-variant="secondary" border-variant="primary">
+
+        <b-navbar toggleable="md" type="light" variant="faded">
+
+          <b-navbar-brand href="#">
+            <div
+             v-show="!album.edit"
+             @click="editTitle(album, index)">{[{ album.title }]}
+             <span v-show="!album.title">{% trans 'Click to Edit Title' %}</span>
+            </div>
+
+             <b-form flud v-show="album.edit">
+               <b-input-group >
+                 <b-form-input type="text"
+                 :ref="getRef('edit-title', index)"
+                  @change="saveTitle(album, index)"
+                v-model="album.title"></b-form-input>
+                <b-input-group-addon @click="saveTitle(album, index)">
+                  <strong class="text-danger fa fa-times"></strong> </b-input-group-addon>
+              </b-input-group>
+            </b-form>
+
+          </b-navbar-brand>
+
+          <b-navbar-nav class="ml-auto">
+              <b-nav-item href="#" right @click="showGallery(album)"> <em class="fa fa-plus"></em> </b-nav-item>
+              <b-nav-item href="#" right @click="updateAlbum(album)"> <em class="fa fa-floppy-o"></em> </b-nav-item>
+          </b-navbar-nav>
+        </b-navbar>
+
+      </b-card-header>
+
+      <b-card-body>
+          <mymedia-album
+            :modal-state="true" :mediafiles="album.mediafiles"></mymedia-album>
+      </b-card-body>
+
+    </b-card>
+  </b-container>
+
+<mymedia-gallery ref="gallery"
+  @on-upload="onShowUploader"
+  @on-select="onImageSelected"></mymedia-gallery> {# Gallery.modalState にバインド #}
+</div>
+
+
+{% endblock %}
+
+
+{% block style %}{{ block.super }}
+<style>
+{% include 'mymedia/imagefile/vue/gallery.css' %}
+</style>
+{% endblock %}
+
+{% block mymedia_script %}
+{% get_csrftoken as token %}   {# CSRF TOKEN #}
+{% include 'mymedia/imagefile/vue/gallery.html' %}
+{% include 'mymedia/imagefile/vue/uploader.html' %}
+{% include 'mymedia/imagefile/vue/album.html' %}
+
+
+<script>
+Vue.options.delimiters = ['{[{', '}]}'];        // Django テンプレートとバッティングしないように変更
+{% include 'mymedia/imagefile/vue/gallery.js' %}
+{% include 'mymedia/imagefile/vue/uploader.js' %}
+{% include 'mymedia/imagefile/vue/album.js' %}
+
+var app = new Vue({
+  el: '#app',
+  components: {
+    'mymedia-gallery': Gallery,
+    'mymedia-uploader': Uploader,
+    'mymedia-album': AlbumComponent
+  },
+  data:{
+    current_album: null,
+    csrftoken: '{{ token }}',
+    albums: {}
+  },
+  created(){
+    var vm = this;
+    var url = "{% url 'mymedia_api:album-list' %}";
+    return axios.get(url).then((res) =>{
+        vm.response = res.data;
+        vm.albums = res.data.results;
+    });
+  },
+  computed: {
+  },
+  methods:  {
+      getRef(prefix, value){
+          return prefix + "-" + value;
+      },
+      editTitle(album, index){
+        console.log("editing title")
+        album.edit = true;
+        this.$forceUpdate();
+        var r = this.getRef('edit-title', index)
+        console.log("ref key", r)
+        // this.$refs[r].focus();
+      },
+      saveTitle(album, index){
+        console.log('savng title')
+        album.edit = false;
+        this.$forceUpdate();
+      },
+      showGallery(album){
+        this.current_album = album;
+        this.$refs.gallery.$refs.dialog.show();
+      },
+      updateAlbum(album){
+        var vm = this;
+        var url = "{% url 'mymedia_api:album-detail' pk='___' %}";
+        url = url.replace('___', album.id);
+
+        var config = {};
+        axios.defaults.xsrfCookieName = 'csrftoken';
+        axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+        console.log(album)
+        return axios.patch(url, album, config).then((res) =>{
+        });
+      },
+      onShowUploader(image){
+        if(image){
+          this.$refs.uploader.setOriginal(image);
+        }
+        this.$refs.uploader.$refs.dialog.show();
+      },
+      onImageSelected(image, selected){
+        if( this.current_album){
+          if(selected == true){
+              this.current_album.mediafiles = this.current_album.mediafiles.concat([image]);
+          }
+        }
+      }
+  }
+
+});
+</script>
+{% endblock %}

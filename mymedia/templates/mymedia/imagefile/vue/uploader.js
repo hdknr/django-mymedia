@@ -106,7 +106,6 @@ var Uploader = Vue.extend({
           axios.defaults.xsrfCookieName = 'csrftoken';
           axios.defaults.xsrfHeaderName = 'X-CSRFToken';
           var method = vm.instance.id ? 'patch' : 'post';
-          console.log("uploadInstance:...", method, data)
           axios[method](vm.endpoint, data, config)
             .then(function(res) {vm.$refs.dialog.hide(); })
             .catch(function(error){console.log(error.response); });

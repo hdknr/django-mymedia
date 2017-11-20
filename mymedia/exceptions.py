@@ -12,6 +12,7 @@ import traceback
 
 
 def exception_handler(exc, context):
+    print(traceback.format_exc())
     response = default_handler(exc, context)
     setattr(exc, 'exc', exc.__class__.__name__)
     content = BaseObjectEncoder.to_json(exc)

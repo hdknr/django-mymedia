@@ -1,4 +1,6 @@
 from django.http import HttpResponse, HttpResponseForbidden
+from django.contrib.admin.views.decorators import staff_member_required
+from django.template.response import TemplateResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from mymedia.files import ModelFieldPath
@@ -25,11 +27,8 @@ def filenames(request):
     return Response(res)
 
 
-def album_list(request):
+@staff_member_required
+def album_index(request):
     '''request.user's Album list'''
-    pass
-
-
-def album_detail(self, id):
-    '''Album Detail/Edit'''
-    pass
+    return TemplateResponse(
+        request, 'mymedia/album/index.html', {})

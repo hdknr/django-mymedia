@@ -1,16 +1,21 @@
 {% load i18n %}
 <script type="text/x-template" id="imagefile-gallery-template">
 
-  <b-modal id="galleryDialog" ref="dialog" v-model='modalState' size="lg" title="Gallery"
+  <b-modal id="galleryDialog" ref="dialog" size="lg" title="Gallery"
     @hide="onHiding" @show="onShow">
 
     <b-container fluid class="p-4 bg-dark" style="overflow-x:scroll;white-space: nowrap;" @scroll="onScrolled">
-
         <b-col v-for="(i, index) in images">
-          <b-img thumbnail :id="setId('thumb', i.id)" fluid :src="i.data" alt="Thumbnail" width="100" @click="onEditImage(i)"></b-img>
+          <b-img thumbnail :id="setId('thumb', i.id)" fluid
+            :src="i.data" alt="Thumbnail" width="100" @click="onEditImage(i)"></b-img>
 
           <br>
-          <b-checkbox @change="$emit('on-select', i, !i.selected)" v-model="i.selected" :id="setId('image-selector', i.id)"></b-checkbox>
+
+          <b-checkbox
+            @change="$emit('on-select', i, !i.selected)"
+            v-model="i.selected" :id="setId('image-selector', i.id)">
+          </b-checkbox>
+
           <b-popover :target="setId('thumb', i.id)" triggers="hover focus" >
              <template slot="title">Preview
               <b-img :src="i.data" fluid ></b-img>
@@ -18,12 +23,11 @@
           </b-popover>
 
         </b-col>
-
     </b-container>
 
+    <br> <br> <br> <br> {# to make scroll bar works.... #}
     <div slot="modal-footer" class="w-100">
-      <b-btn size="sm" variant="primary" @click="onUpload"> {% trans 'Upload...' %} </b-btn>
-      <b-btn size="sm" class="float-right" variant="primary" @click="modalState=false"> {% trans 'Close' %} </b-btn>
     </div>
+
   </b-modal>
 </script>

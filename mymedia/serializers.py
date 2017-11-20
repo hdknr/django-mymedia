@@ -59,12 +59,44 @@ class OpenMediaFileSerializer(serializers.ModelSerializer):
                     for i in obj.thumbnail_set.all())
 
 
+class LocalMediaFileSerializer(serializers.ModelSerializer):
+
+    data = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.MediaFile
+        fields = ['id', 'data', ]
+        read_only_fields = ['data']
+
+    def get_data(self, obj):
+        request = self.context.get('request', None)
+        def _url(path):
+            return request and request.build_absolute_uri(path) or path
+        return _url(obj.data.url)
+
+
 class AlbumSerializer(serializers.ModelSerializer):
+
+    mediafiles = serializers.JSONField(write_only=True)
 
     class Meta:
         model = models.Album
-        fields = '__all__'
+        fields = ['id', 'title', 'owner', 'mediafiles', ]
         read_only_fields = ('owner', )
+
+    def to_representation(self, obj):
+        res = super(AlbumSerializer, self).to_representation(obj)
+        res['mediafiles'] = [
+            LocalMediaFileSerializer(i.mediafile, context=self.context).data
+            for i in obj.albumfile_set.all()]
+        return res
+
+    def update(self, instance, validated_data):
+        mediafiles = validated_data.pop('mediafiles', [])
+        result = super(AlbumSerializer, self).update(instance, validated_data)
+        print(mediafiles, validated_data)
+        instance.update_files([i['id'] for i in mediafiles])
+        return result
 
 
 class AlbumFileSerializer(serializers.ModelSerializer):

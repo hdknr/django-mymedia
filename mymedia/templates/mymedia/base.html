@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% block mymedia_content %}
+  {% endblock %}
+{% endblock %}
+
+{% block local_script %}{{ block.super }}
+  <!--- myarticles local script ---->
+
+  {% block mymedia_script %}
+  {% endblock %}
+{% endblock %}

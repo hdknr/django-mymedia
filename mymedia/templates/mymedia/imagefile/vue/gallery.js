@@ -1,6 +1,6 @@
 {% load staticfiles %}
 var Gallery = Vue.extend({
-    props: ['modalState', ], template: '#imagefile-gallery-template',
+    props: [], template: '#imagefile-gallery-template',
     data(){
         return{
             hideGate: false,
@@ -33,11 +33,12 @@ var Gallery = Vue.extend({
       },
       onUpload(evt){
         //this.hideGate = true;
-        this.$emit('on-upload');
+        // this.$emit('on-upload');
       },
       onEditImage(image, evt){
+        console.log("onEditImage......");
         //this.hideGate = true;
-        this.$emit('on-upload', image);
+        // this.$emit('on-upload', image);
       },
       getPageUrl(page){
         if (page == null || page == undefined)
