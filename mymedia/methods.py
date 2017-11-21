@@ -45,13 +45,17 @@ class MediaFile(object):
 
 class ThumbnailProfile(object):
 
-    def get_thumbnail_for(self, media):
+    def get_thumbnail_for(self, media, force=False):
+        thumbnail = media.thumbnail_set.filter(profile=self).first()
+
+        if thumbnail and thumbnail.data and not force:
+            return thumbnail
+        
         image_format = media.media_type.content_type.split('/')[1]
         resized = images.resize_image(
             media.data, image_format, self.width, self.height)
         resized.name = os.path.basename(media.data.name)
 
-        thumbnail = media.thumbnail_set.filter(profile=self).first()
         if thumbnail:
             thumbnail.data = resized
             thumbnail.save()

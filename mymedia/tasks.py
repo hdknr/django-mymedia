@@ -21,4 +21,5 @@ def on_mediafile_saving(sender, instance=None, **kwargs):
 
 @receiver(post_save, sender=models.MediaFile)
 def on_mediafile_saved(sender, instance=None, **kwargs):
-    instance and instance.update_meta()
+    instance.update_meta()
+    instance.all_thumbnails()
