@@ -1,6 +1,5 @@
 from collections import OrderedDict
-from rest_framework.permissions import IsAuthenticated
-from rest_framework import viewsets, pagination
+from rest_framework import viewsets, pagination, permissions
 from rest_framework.response import Response
 from . import models, serializers, filters
 
@@ -26,10 +25,12 @@ class MediaFileViewSet(viewsets.ModelViewSet):
     queryset = models.MediaFile.objects.all()
     serializer_class = serializers.MediaFileSerializer
     filter_class = filters.MediaFileFilter
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
     pagination_class = Pagination
 
     def get_queryset(self):
+        if not self.request.user.is_authenticated():
+            return models.MediaFile.objects.filter(access="public")
         return self.request.user.mediafile_set.all()
 
     def perform_create(self, serializer):
@@ -43,7 +44,7 @@ class ImageFileViewSet(MediaFileViewSet):
 
 
 class OpenMediaFileViewSet(viewsets.ModelViewSet):
-
+    # TODO: IsAuthenticatedOrReadOnly to MediaFileViewSet
     queryset = models.MediaFile.objects.all()
     serializer_class = serializers.OpenMediaFileSerializer
     filter_class = filters.MediaFileFilter
@@ -54,11 +55,15 @@ class AlbumViewSet(viewsets.ModelViewSet):
     queryset = models.Album.objects.all()
     serializer_class = serializers.AlbumSerializer
     filter_class = filters.AlbumFilter
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+    # Guest cant GET, HEAD or OPTIONS
     pagination_class = Pagination
 
     def get_queryset(self):
-        return self.request.user.album_set.all()
+        # TODO: this method can be dropped.
+        if request.user.is_authenticated():
+            return self.request.user.album_set.all()
+        return models.Album.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -68,7 +73,7 @@ class AlbumFileViewSet(viewsets.ModelViewSet):
     queryset = models.AlbumFile.objects.all()
     serializer_class = serializers.AlbumFileSerializer
     filter_class = filters.AlbumFileFilter
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (permissions.IsAuthenticated, )
     pagination_class = Pagination
 
     def get_queryset(self):
