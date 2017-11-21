@@ -1,0 +1,11 @@
+<script type="text/x-template" id="mymedia-dropload-template">
+<b-container fluid v-if="album.id" class="dropbox">
+  <b-form-file class="input-file"
+    multiple :name="uploadFieldName" :disabled="isSaving"
+    @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
+    accept="image/*">
+ </b-form-file>
+  <p v-if="isInitial"> Drag your file(s) here to begin<br> or click to browse </p>
+  <p v-if="isSaving"> Uploading {{ fileCount }} files... </p>
+</b-container>
+</script>

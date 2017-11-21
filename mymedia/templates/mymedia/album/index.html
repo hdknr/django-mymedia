@@ -43,6 +43,7 @@
       <b-card-body>
           <mymedia-album
             :modal-state="true" :mediafiles="album.mediafiles"></mymedia-album>
+          <mymedia-dropload :album="album"></mymedia-dropload>
       </b-card-body>
 
     </b-card>
@@ -61,6 +62,9 @@
 <style>
 {% include 'mymedia/imagefile/vue/gallery.css' %}
 </style>
+<style lang="scss">
+{% include 'mymedia/imagefile/vue/dropload.scss' %}
+</style>
 {% endblock %}
 
 {% block mymedia_script %}
@@ -68,6 +72,7 @@
 {% include 'mymedia/imagefile/vue/gallery.html' %}
 {% include 'mymedia/imagefile/vue/uploader.html' %}
 {% include 'mymedia/imagefile/vue/album.html' %}
+{% include 'mymedia/imagefile/vue/dropload.html' %}
 
 
 <script>
@@ -75,13 +80,14 @@ Vue.options.delimiters = ['{[{', '}]}'];        // Django テンプレートと�
 {% include 'mymedia/imagefile/vue/gallery.js' %}
 {% include 'mymedia/imagefile/vue/uploader.js' %}
 {% include 'mymedia/imagefile/vue/album.js' %}
-
+{% include 'mymedia/imagefile/vue/dropload.js' %}
 var app = new Vue({
   el: '#app',
   components: {
     'mymedia-gallery': Gallery,
     'mymedia-uploader': Uploader,
-    'mymedia-album': AlbumComponent
+    'mymedia-album': AlbumComponent,
+    'mymedia-dropload': DroploadComponent
   },
   data:{
     current_album: null,
@@ -91,9 +97,12 @@ var app = new Vue({
   created(){
     var vm = this;
     var url = "{% url 'mymedia_api:album-list' %}";
-    return axios.get(url).then((res) =>{
+    return axios.get(url).then((res) => {
+      try{
         vm.response = res.data;
         vm.albums = res.data.results;
+      }catch(e){
+      }
     });
   },
   computed: {

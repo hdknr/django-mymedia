@@ -1,4 +1,19 @@
 {% load staticfiles %}
+
+function endpoinMediaFile(id){
+  if(id) return "{% url 'mymedia_api:imagefile-detail' pk='___' %}".replace('___', id);
+  else return "{% url 'mymedia_api:imagefile-list' %}";
+}
+
+function uploadMediaFile(formData, mediafile_id){
+    var endpoint = endpoinMediaFile(mediafile_id);
+    var method = (mediafile_id) ? 'patch' : 'post';
+    var config = {headers: {'content-type': 'multipart/form-data'}};
+    axios.defaults.xsrfCookieName = 'csrftoken';
+    axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+    return axios[method](endpoint, formData, config);
+}
+
 var Uploader = Vue.extend({
     props: ['modalState'], template: '#imagefile-uploader-template',
     data(){
@@ -15,11 +30,7 @@ var Uploader = Vue.extend({
     mounted(){
     },
     computed: {
-       endpoint(){
-           if(this.instance.id){
-             return "{% url 'mymedia_api:imagefile-detail' pk='___' %}".replace('___', this.instance.id); }
-           else {return "{% url 'mymedia_api:imagefile-list' %}"; }
-       },
+       endpoint(){ return endpoinMediaFile(this.instance.id); },
        tags_json(){
          try{
             return JSON.stringify(
@@ -101,12 +112,7 @@ var Uploader = Vue.extend({
       },
       uploadInstance(){
           var vm = this;
-          var config = {headers: {'content-type': 'multipart/form-data'}};
-          var data = vm.uploadData;
-          axios.defaults.xsrfCookieName = 'csrftoken';
-          axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-          var method = vm.instance.id ? 'patch' : 'post';
-          axios[method](vm.endpoint, data, config)
+          uploadMediaFile(vm.uploadData, vm.instance.id)
             .then(function(res) {vm.$refs.dialog.hide(); })
             .catch(function(error){console.log(error.response); });
       }
