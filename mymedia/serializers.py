@@ -59,13 +59,13 @@ class OpenMediaFileSerializer(serializers.ModelSerializer):
                     for i in obj.thumbnail_set.all())
 
 
-class LocalMediaFileSerializer(serializers.ModelSerializer):
+class LocalMediaFileSerializer(OpenMediaFileSerializer):
 
     data = serializers.SerializerMethodField()
 
     class Meta:
         model = models.MediaFile
-        fields = ['id', 'data', ]
+        fields = ['id', 'title', 'data', 'thumbnails']
         read_only_fields = ['data']
 
     def get_data(self, obj):
