@@ -6,7 +6,12 @@
 <div id=app>
 
   <b-container fluid >
-    <b-card v-for="(album, index) in albums" v-if="album.mediafiles[0]" class="my-3 row">
+
+    <b-card class="my-3 row">
+        <b-button @click="addAlbum()">{% trans 'New Album' %}</b-button>
+    </b-card>
+
+    <b-card v-for="(album, index) in albums" class="my-3 row">
 
       <b-card-header header-bg-variant="secondary" border-variant="primary">
 
@@ -16,6 +21,7 @@
             <div
              v-show="!album.edit"
              @click="editTitle(album, index)">{[{ album.title }]}
+             :{[{ album.id }]}
              <span v-show="!album.title">{% trans 'Click to Edit Title' %}</span>
             </div>
 
@@ -35,6 +41,7 @@
           <b-navbar-nav class="ml-auto">
               <b-nav-item href="#" right @click="showGallery(album)"> <em class="fa fa-plus"></em> </b-nav-item>
               <b-nav-item href="#" right @click="updateAlbum(album)"> <em class="fa fa-floppy-o"></em> </b-nav-item>
+              <b-nav-item href="#" right @click="deleteAlbum(album)"> <em class="fa fa-trash"></em> </b-nav-item>
           </b-navbar-nav>
         </b-navbar>
 
@@ -81,80 +88,6 @@ Vue.options.delimiters = ['{[{', '}]}'];        // Django テンプレートと�
 {% include 'mymedia/imagefile/vue/uploader.js' %}
 {% include 'mymedia/imagefile/vue/album.js' %}
 {% include 'mymedia/imagefile/vue/dropload.js' %}
-var app = new Vue({
-  el: '#app',
-  components: {
-    'mymedia-gallery': Gallery,
-    'mymedia-uploader': Uploader,
-    'mymedia-album': AlbumComponent,
-    'mymedia-dropload': DroploadComponent
-  },
-  data:{
-    current_album: null,
-    csrftoken: '{{ token }}',
-    albums: {}
-  },
-  created(){
-    var vm = this;
-    var url = "{% url 'mymedia_api:album-list' %}";
-    return axios.get(url).then((res) => {
-      try{
-        vm.response = res.data;
-        vm.albums = res.data.results;
-      }catch(e){
-      }
-    });
-  },
-  computed: {
-  },
-  methods:  {
-      getRef(prefix, value){
-          return prefix + "-" + value;
-      },
-      editTitle(album, index){
-        console.log("editing title")
-        album.edit = true;
-        this.$forceUpdate();
-        var r = this.getRef('edit-title', index)
-        console.log("ref key", r)
-        // this.$refs[r].focus();
-      },
-      saveTitle(album, index){
-        console.log('savng title')
-        album.edit = false;
-        this.$forceUpdate();
-      },
-      showGallery(album){
-        this.current_album = album;
-        this.$refs.gallery.$refs.dialog.show();
-      },
-      updateAlbum(album){
-        var vm = this;
-        var url = "{% url 'mymedia_api:album-detail' pk='___' %}";
-        url = url.replace('___', album.id);
-
-        var config = {};
-        axios.defaults.xsrfCookieName = 'csrftoken';
-        axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-        console.log(album)
-        return axios.patch(url, album, config).then((res) =>{
-        });
-      },
-      onShowUploader(image){
-        if(image){
-          this.$refs.uploader.setOriginal(image);
-        }
-        this.$refs.uploader.$refs.dialog.show();
-      },
-      onImageSelected(image, selected){
-        if( this.current_album){
-          if(selected == true){
-              this.current_album.mediafiles = this.current_album.mediafiles.concat([image]);
-          }
-        }
-      }
-  }
-
-});
+{% include 'mymedia/album/index.js' %}
 </script>
 {% endblock %}

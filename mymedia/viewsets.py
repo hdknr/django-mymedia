@@ -61,7 +61,7 @@ class AlbumViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # TODO: this method can be dropped.
-        if request.user.is_authenticated():
+        if self.request.user.is_authenticated():
             return self.request.user.album_set.all()
         return models.Album.objects.all()
 

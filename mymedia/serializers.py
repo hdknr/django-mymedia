@@ -92,11 +92,18 @@ class AlbumSerializer(serializers.ModelSerializer):
         return res
 
     def update(self, instance, validated_data):
+        print("album update....>")
         mediafiles = validated_data.pop('mediafiles', [])
         result = super(AlbumSerializer, self).update(instance, validated_data)
-        print(mediafiles, validated_data)
         instance.update_files([i['id'] for i in mediafiles])
         return result
+
+    def create(self, validated_data):
+        print("album create ....>")
+        mediafiles = validated_data.pop('mediafiles', [])
+        instance = super(AlbumSerializer, self).create(validated_data)
+        instance.update_files([i['id'] for i in mediafiles])
+        return instance
 
 
 class AlbumFileSerializer(serializers.ModelSerializer):
