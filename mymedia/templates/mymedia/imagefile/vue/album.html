@@ -1,29 +1,46 @@
 {% load bootstrap3 i18n %}
 <script type="text/x-template" id="mymedia-album-template">
   <b-container fluid  v-show="modalState">
+    <b-row>
+      <b-col cols="8">
+          <b-row id="slide-container" v-if="mediafiles.length > 0">
 
-      <b-row id="slide-container" v-if="mediafiles.length > 0">
-        <b-col cols="2"
-            v-for="(media, position) in mediafiles"
-            v-bind:mediafile-id="media.id"
-            @dragstart="on_dragstart(position, $event)"
-            @dragenter="on_dragenter(position, $event)"
-            @dragend="on_drop($event)"
-            draggable="true">
+            <b-col cols="2"
+                :class="{'border-danger': current==media, 'border': current==media}"
+                v-for="(media, position) in mediafiles"
+                v-bind:mediafile-id="media.id"
+                @dragstart="on_dragstart(position, $event)"
+                @dragenter="on_dragenter(position, $event)"
+                @dragend="on_drop($event)"
+                draggable="true">
 
-            <span class="btn btn-xs fa fa-trash"
-              data-toggle="tooltip" data-placement="top"
-              title="{% trans 'Remove MediaFile' %}"
-              @click="removeFile(position)"></span>
+                <span class="btn btn-xs fa fa-trash"
+                  data-toggle="tooltip" data-placement="top"
+                  title="{% trans 'Remove MediaFile' %}"
+                  @click="removeFile(position)"></span>
 
-            <b-img width="120px" class="media-move-handle"
-              style="padding-top: 5px" v-bind:src="media.data" ></b-img>
-        </b-col>
-      </b-row>
+                <b-img width="120px"
+                  class="rounded"
+                  @click="current = mediafiles[position]"
+                  class="media-move-handle"
+                  style="padding-top: 5px" :src="media.data" >
+                </b-img>
 
-      <b-row  id="slide-container" v-else>
-          {% trans 'No Media Files selected' %}
-      </b-row>
+                <span> {[{ media.title }]} </span>
+            </b-col>
+          </b-row>
 
+          <b-row  id="slide-container" v-else>
+              {% trans 'No Media Files selected' %}
+          </b-row>
+      </b-col>
+
+      <b-col cols="4" class="pl-2">
+          <b-img :src="current.data"
+            class='rounded img-thumbnail'
+            fluid-grow alt="Fluid-Grow image" />
+      </b-col>
+
+    </b-row>
   </b-container>
 </script>

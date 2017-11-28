@@ -1,11 +1,15 @@
 var AlbumComponent = Vue.extend({
   template: '#mymedia-album-template',
   props: ['modalState', 'mediafiles'],
-  
+
   data: function(){
     return {
+      current: null,
       drag: null, dragenter: null
     };
+  },
+  mounted(){
+      this.current = this.mediafiles[0];
   },
   methods: {
      on_dragstart(mediafile,e) {this.drag = mediafile; },
