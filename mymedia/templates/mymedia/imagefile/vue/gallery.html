@@ -4,6 +4,7 @@
   <b-modal id="galleryDialog" ref="dialog" size="lg" title="Gallery"
     @hide="onHiding" @show="onShow">
 
+    <gallery-dropload> </gallery-dropload>
     <b-container fluid class="p-4 bg-dark" style="overflow-x:scroll;white-space: nowrap;" @scroll="onScrolled">
         <b-col v-for="(i, index) in images">
           <b-img thumbnail :id="setId('thumb', i.id)" fluid
@@ -25,7 +26,9 @@
         </b-col>
     </b-container>
 
+    <mymedia-dropload @on-mediafile-uploaed="onMediafileUpload"> </mymedia-dropload>
     <br> <br> <br> <br> {# to make scroll bar works.... #}
+
     <div slot="modal-footer" class="w-100">
     </div>
 

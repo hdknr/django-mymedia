@@ -1,6 +1,9 @@
 {% load staticfiles %}
 var Gallery = Vue.extend({
     props: [], template: '#imagefile-gallery-template',
+    components: {
+      'mymedia-dropload': DroploadComponent
+    },
     data(){
         return{
             hideGate: false,
@@ -20,7 +23,7 @@ var Gallery = Vue.extend({
     },
     methods: {
       setId(prefix, id){
-          return prefix + "-" +id;
+        return prefix + "-" + id;
       },
       onShow(){
           this.images.forEach(function(i){i.selected = false;});
@@ -31,9 +34,8 @@ var Gallery = Vue.extend({
             this.hideGate = false;
         }
       },
-      onUpload(evt){
-        //this.hideGate = true;
-        // this.$emit('on-upload');
+      onMediafileUpload(mediafile){
+        this.$emit('on-select', mediafile, true);
       },
       onEditImage(image, evt){
         console.log("onEditImage......");

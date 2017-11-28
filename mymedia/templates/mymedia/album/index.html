@@ -49,8 +49,8 @@
 
       <b-card-body>
           <mymedia-album
-            :modal-state="true" :mediafiles="album.mediafiles"></mymedia-album>
-          <mymedia-dropload :album="album"></mymedia-dropload>
+            :modal-state="true" :mediafiles="album.mediafiles">
+          </mymedia-album>
       </b-card-body>
 
     </b-card>
@@ -76,18 +76,16 @@
 
 {% block mymedia_script %}
 {% get_csrftoken as token %}   {# CSRF TOKEN #}
-{% include 'mymedia/imagefile/vue/gallery.html' %}
-{% include 'mymedia/imagefile/vue/uploader.html' %}
-{% include 'mymedia/imagefile/vue/album.html' %}
 {% include 'mymedia/imagefile/vue/dropload.html' %}
+{% include 'mymedia/imagefile/vue/gallery.html' %}
+{% include 'mymedia/imagefile/vue/album.html' %}
 
 
 <script>
 Vue.options.delimiters = ['{[{', '}]}'];        // Django テンプレートとバッティングしないように変更
-{% include 'mymedia/imagefile/vue/gallery.js' %}
-{% include 'mymedia/imagefile/vue/uploader.js' %}
-{% include 'mymedia/imagefile/vue/album.js' %}
 {% include 'mymedia/imagefile/vue/dropload.js' %}
+{% include 'mymedia/imagefile/vue/gallery.js' %}
+{% include 'mymedia/imagefile/vue/album.js' %}
 {% include 'mymedia/album/index.js' %}
 </script>
 {% endblock %}

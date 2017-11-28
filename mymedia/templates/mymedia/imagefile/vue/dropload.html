@@ -1,5 +1,5 @@
 <script type="text/x-template" id="mymedia-dropload-template">
-<b-container fluid v-if="album.id" class="dropbox">
+<b-container fluid class="dropbox">
   <b-form-file class="input-file"
     multiple :name="uploadFieldName" :disabled="isSaving"
     @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"

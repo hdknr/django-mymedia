@@ -1,7 +1,21 @@
 const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
+
+function endpoinMediaFile(id){
+  if(id) return "{% url 'mymedia_api:imagefile-detail' pk='___' %}".replace('___', id);
+  else return "{% url 'mymedia_api:imagefile-list' %}";
+}
+
+function uploadMediaFile(formData, mediafile_id){
+    var endpoint = endpoinMediaFile(mediafile_id);
+    var method = (mediafile_id) ? 'patch' : 'post';
+    var config = {headers: {'content-type': 'multipart/form-data'}};
+    axios.defaults.xsrfCookieName = 'csrftoken';
+    axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+    return axios[method](endpoint, formData, config);
+}
+
 var DroploadComponent = Vue.extend({
   template: '#mymedia-dropload-template',
-  props: ['album'],
   data: function(){
     return {
       tags: 'Photo',
@@ -25,7 +39,7 @@ var DroploadComponent = Vue.extend({
     isSuccess() { return this.currentStatus === STATUS_SUCCESS; },
     isFailed() { return this.currentStatus === STATUS_FAILED; }
   },
-methods: {
+  methods: {
     reset() {
       // reset form to initial state
       this.currentStatus = STATUS_INITIAL;
@@ -36,7 +50,7 @@ methods: {
       // upload data to the server
       uploadMediaFile(formData)
         .then(x => {
-          this.album.mediafiles.push(x.data);     // Add to Album
+          this.$emit('on-mediafile-uploaed', x.data);
           this.currentStatus = STATUS_INITIAL;
         })
         .catch(err => {

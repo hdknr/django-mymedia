@@ -2,9 +2,7 @@ var app = new Vue({
   el: '#app',
   components: {
     'mymedia-gallery': Gallery,
-    'mymedia-uploader': Uploader,
-    'mymedia-album': AlbumComponent,
-    'mymedia-dropload': DroploadComponent
+    'mymedia-album': AlbumComponent
   },
   data:{
     current_album: null,

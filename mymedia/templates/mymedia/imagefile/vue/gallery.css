@@ -1,5 +1,5 @@
 .popover {min-width: 50em !important; }
 
-#galleryDialog .col {
+#galleryDialog .col{
   display: inline-block; width:auto;
 }
