@@ -6,26 +6,11 @@ var AlbumComponent = Vue.extend({
   },
   data: function(){
     return {
-      current_index: 0,
       drag: null, dragenter: null
     };
   },
   created(){
-      //Vue.set(this, 'current', this.value.mediafiles[0]);
-  },
-  watch:{
-      'value': function(updated){
-          if(this.value.id != updated.id){
-            console.log("value changed", this.current);
-          }
-      }
-  },
-  computed:{
-      'current': function(){
-        if (this.value.mediafiles.length > 0)
-          return this.value.mediafiles[this.current_index];
-        return null;
-      }
+      this.value.current = this.value.mediafiles[0];
   },
   methods: {
      on_dragstart(mediafile,e) {this.drag = mediafile; },
@@ -34,6 +19,11 @@ var AlbumComponent = Vue.extend({
        this.value.mediafiles.splice(
          this.value.dragenter, 0,
          this.value.mediafiles.splice(this.drag, 1)[0]); },
+
+     selectFile(index){
+        this.value.current = this.value.mediafiles[index];
+        this.$forceUpdate();
+      },
 
      removeFile(index){
        this.value.mediafiles.splice(index, 1); },
@@ -44,7 +34,7 @@ var AlbumComponent = Vue.extend({
 
      replaceCurrentMediaFile(item){
        var i = this.value.mediafiles.findIndex(el => el.id === item.id);
-       Vue.set(this, 'current', item);
+       Vue.set(this.value, 'current', item);
        this.value.mediafiles[i] = item;
        this.$forceUpdate();
      }

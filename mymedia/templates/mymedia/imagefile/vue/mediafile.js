@@ -1,6 +1,6 @@
 {% load staticfiles %}
 var MediaFileComponent = Vue.extend({
-    props: ['mediafile'], template: '#imagefile-mediafile-template',
+    props: ['value'], template: '#imagefile-mediafile-template',
     mixins: [apiMixin],
     data(){
         return{
@@ -11,6 +11,9 @@ var MediaFileComponent = Vue.extend({
         }
     },
     computed: {
+      mediafile(){
+        return this.value;
+      },
       backgound_image(){
           return 'url("' + this.image_url + '")'
       },
@@ -78,7 +81,6 @@ var MediaFileComponent = Vue.extend({
         }else{
             this.uploadMediaFile().then((res) => {
               res.data.thumbnails = vm.mediafile.thumbnails;
-              Vue.set(vm, 'mediafile', res.data);
               vm.$emit('on-mediafile-updated', res.data);
             });
         }
