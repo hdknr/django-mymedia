@@ -20,7 +20,7 @@
 
         <b-list-group flush>
 
-          <b-list-group-item>
+          <b-list-group-item> {# Thumbnail selector #}
             <b-button-toolbar aria-label="Toolbar with button groups and dropdown menu">
                <b-button-group class="mx-1" size="sm">
                  <b-btn
@@ -31,15 +31,15 @@
                  <b-btn
                     :variant="switchVariant(name)"
                     @click="setCurrentImage(name)"
-                    v-for="(url, name, index) in mediafile.thumbnails">{[{ name }]}</b-btn>
+                    v-for="(data, name, index) in mediafile.thumbnails">{[{ name }]}</b-btn>
              </b-button-toolbar>
           </b-list-group-item>
 
-          <b-list-group-item v-if="uploadingFile">
+          <b-list-group-item v-if="uploadingFile">  {# Image File Uploader #}
             <b-alert show dismissible variant="primary" @dismissed="reset">
               <i class="fa fa-file-image-o" aria-hidden="true"></i>
               {[{ uploadingFile.name }]}
-              <b-btn size="sm">Update</b-btn>
+              <b-btn size="sm" @click="upload">Update</b-btn>
             </b-alert>
           </b-list-group-item>
 

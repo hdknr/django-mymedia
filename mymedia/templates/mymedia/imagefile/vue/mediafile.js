@@ -1,6 +1,7 @@
 {% load staticfiles %}
 var MediaFileComponent = Vue.extend({
     props: ['mediafile'], template: '#imagefile-mediafile-template',
+    mixins: [apiMixin],
     data(){
         return{
             'nail':  null,
@@ -15,7 +16,7 @@ var MediaFileComponent = Vue.extend({
       },
       image_url(){
         if(this.nail)
-          return this.mediafile.thumbnails[this.nail];
+          return this.mediafile.thumbnails[this.nail].data;
         return this.mediafile.data;
       }
     },
@@ -49,10 +50,20 @@ var MediaFileComponent = Vue.extend({
 
       },
       uploadThumbnailFile(){
-
+        var thumbnail = this.mediafile.thumbnails[this.nail];
+        var formData = new FormData();
+        formData.append('data', this.uploadingFile, this.uploadingFile.name);
+        formData.append('profile_name', this.nail);
+        formData.append('image', this.mediafile.id);
+        return this.sendThumbnail(thumbnail.id, formData);
       },
       upload(){
-        if(self.uploadingFile){
+        if(this.uploadingFile){
+            if(this.nail)
+              this.uploadThumbnailFile().then((res) =>{
+                  this.mediafile.thumbnails[this.nail] = res.data;
+              });
+            this.uploadMediaFile();
         }
       }
     }
