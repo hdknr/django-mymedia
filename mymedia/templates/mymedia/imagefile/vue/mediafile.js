@@ -15,7 +15,7 @@ var MediaFileComponent = Vue.extend({
           return 'url("' + this.image_url + '")'
       },
       image_url(){
-        if(this.nail)
+        if(this.nail && this.nail in this.mediafile.thumbnails )
           return this.mediafile.thumbnails[this.nail].data;
         return this.mediafile.data;
       }
@@ -47,7 +47,15 @@ var MediaFileComponent = Vue.extend({
           .map(x => {vm.uploadingFile = fileList[x];});
       },
       uploadMediaFile(){
-
+        var formData = new FormData();
+        if(this.uploadingFile){
+          formData.append('data', this.uploadingFile, this.uploadingFile.name);
+        }
+        formData.append('title', this.mediafile.title);
+        formData.append('filename', this.mediafile.filename);
+        formData.append('tags', JSON.stringify(this.mediafile.tags));
+        formData.append('access', this.mediafile.access);
+        return this.sendMediaFile(this.mediafile.id, formData);
       },
       uploadThumbnailFile(){
         var thumbnail = this.mediafile.thumbnails[this.nail];
@@ -58,12 +66,17 @@ var MediaFileComponent = Vue.extend({
         return this.sendThumbnail(thumbnail.id, formData);
       },
       upload(){
-        if(this.uploadingFile){
-            if(this.nail)
-              this.uploadThumbnailFile().then((res) =>{
-                  this.mediafile.thumbnails[this.nail] = res.data;
-              });
-            this.uploadMediaFile();
+        var vm = this;
+        if(this.nail){
+          if(this.uploadingFile)
+            this.uploadThumbnailFile().then((res) =>{
+              this.mediafile.thumbnails[this.nail] = res.data; });
+        }else{
+            this.uploadMediaFile().then((res) => {
+              res.data.thumbnails = vm.mediafile.thumbnails;
+              Vue.set(vm, 'mediafile', res.data);
+              this.$emit('on-mediafile-updated', res.data);
+            });
         }
       }
     }

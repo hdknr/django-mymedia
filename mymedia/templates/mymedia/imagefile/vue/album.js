@@ -26,7 +26,13 @@ var AlbumComponent = Vue.extend({
 
      addFiles(mediafiles){
       var arr = this.mediafiles.concat(mediafiles);
-      this.mediafiles = arr;
-    }
+      this.mediafiles = arr; },
+
+     replaceCurrentMediaFile(item){
+       var i = this.mediafiles.findIndex(el => el.id === item.id);
+       Vue.set(this, 'current', item);
+       this.mediafiles[i] = item;
+       this.$forceUpdate();
+     }
   }
 });

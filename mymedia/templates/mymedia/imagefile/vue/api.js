@@ -6,6 +6,15 @@ var apiMixin = {
         axios.defaults.xsrfHeaderName = 'X-CSRFToken';
         return axios[method](endpoint, formData, config);
     },
+    sendMediaFile(id, formdata){
+      var endpoint = "{% url 'mymedia_api:imagefile-list' %}";
+      var method = 'put';
+      if(id){
+          method = 'patch';
+          endpoint = "{% url 'mymedia_api:imagefile-detail' pk='___' %}".replace('___', id);
+      }
+      return this.sendForm(endpoint, method, formdata);
+    },
     sendThumbnail(id, formdata){
       var endpoint = "{% url 'mymedia_api:thumbnail-list' %}";
       var method = 'put';

@@ -36,7 +36,9 @@
       </b-col>
 
       <b-col cols="4" class="pl-2">
-          <mymedia-mediafile :mediafile="current"></mymedia-mediafile>
+          <mymedia-mediafile
+            @on-mediafile-updated="replaceCurrentMediaFile"
+            :mediafile="current"></mymedia-mediafile>
       </b-col>
 
     </b-row>
