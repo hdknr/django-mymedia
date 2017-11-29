@@ -55,7 +55,12 @@ class OpenMediaFileSerializer(serializers.ModelSerializer):
         def _url(path):
             return request and request.build_absolute_uri(path) or path
 
-        return dict((i.profile.name, _url(i.data.url))
+        def _obj(thumbnail):
+            return dict(
+                id=thumbnail.id, data=_url(thumbnail.data.url),
+                profile_name=thumbnail.profile.name)
+
+        return dict((i.profile.name, _obj(i))
                     for i in obj.thumbnail_set.all())
 
 
@@ -94,14 +99,12 @@ class AlbumSerializer(serializers.ModelSerializer):
         return res
 
     def update(self, instance, validated_data):
-        print("album update....>")
         mediafiles = validated_data.pop('mediafiles', [])
         result = super(AlbumSerializer, self).update(instance, validated_data)
         instance.update_files([i['id'] for i in mediafiles])
         return result
 
     def create(self, validated_data):
-        print("album create ....>")
         mediafiles = validated_data.pop('mediafiles', [])
         instance = super(AlbumSerializer, self).create(validated_data)
         instance.update_files([i['id'] for i in mediafiles])
