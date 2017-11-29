@@ -1,6 +1,6 @@
 var AlbumComponent = Vue.extend({
   template: '#mymedia-album-template',
-  props: ['modalState', 'mediafiles'],
+  props: ['value', 'modalState'],     {# value is bound to Album instance #}
   components: {
     'mymedia-mediafile': MediaFileComponent
   },
@@ -11,27 +11,27 @@ var AlbumComponent = Vue.extend({
     };
   },
   created(){
-      Vue.set(this, 'current', this.mediafiles[0]);
+      Vue.set(this, 'current', this.value.mediafiles[0]);
   },
   methods: {
      on_dragstart(mediafile,e) {this.drag = mediafile; },
      on_dragenter(mediafile, e){this.dragenter = mediafile; },
      on_drop(e) {
-       this.mediafiles.splice(
-         this.dragenter, 0,
-         this.mediafiles.splice(this.drag, 1)[0]); },
+       this.value.mediafiles.splice(
+         this.value.dragenter, 0,
+         this.value.mediafiles.splice(this.drag, 1)[0]); },
 
      removeFile(index){
-       this.mediafiles.splice(index, 1); },
+       this.value.mediafiles.splice(index, 1); },
 
      addFiles(mediafiles){
-      var arr = this.mediafiles.concat(mediafiles);
-      this.mediafiles = arr; },
+      var arr = this.value.mediafiles.concat(mediafiles);
+      this.value.mediafiles = arr; },
 
      replaceCurrentMediaFile(item){
-       var i = this.mediafiles.findIndex(el => el.id === item.id);
+       var i = this.value.mediafiles.findIndex(el => el.id === item.id);
        Vue.set(this, 'current', item);
-       this.mediafiles[i] = item;
+       this.value.mediafiles[i] = item;
        this.$forceUpdate();
      }
   }

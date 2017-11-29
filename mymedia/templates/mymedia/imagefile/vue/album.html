@@ -3,11 +3,11 @@
   <b-container fluid  v-show="modalState">
     <b-row>
       <b-col cols="8">
-          <b-row id="slide-container" v-if="mediafiles.length > 0">
+          <b-row id="slide-container" v-if="value.mediafiles.length > 0">
 
             <b-col cols="2"
                 :class="{'border-danger': current==media, 'border': current==media}"
-                v-for="(media, position) in mediafiles"
+                v-for="(media, position) in value.mediafiles"
                 v-bind:mediafile-id="media.id"
                 @dragstart="on_dragstart(position, $event)"
                 @dragenter="on_dragenter(position, $event)"
@@ -21,7 +21,7 @@
 
                 <b-img width="120px"
                   class="rounded"
-                  @click="current = mediafiles[position]"
+                  @click="current = value.mediafiles[position]"
                   class="media-move-handle"
                   style="padding-top: 5px" :src="media.data" >
                 </b-img>
@@ -35,7 +35,7 @@
           </b-row>
       </b-col>
 
-      <b-col cols="4" class="pl-2">
+      <b-col cols="4" class="pl-2" v-if="value.id">
           <mymedia-mediafile
             @on-mediafile-updated="replaceCurrentMediaFile"
             :mediafile="current"></mymedia-mediafile>
