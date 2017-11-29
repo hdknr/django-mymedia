@@ -25,3 +25,9 @@ class AlbumFileFilter(filters.FilterSet):
     class Meta:
         model = models.AlbumFile
         exclude = []
+
+class ThumbnailFilter(filters.FilterSet):
+
+    class Meta:
+        model = models.Thumbnail
+        exclude = ['data']

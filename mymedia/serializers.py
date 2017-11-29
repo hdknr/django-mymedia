@@ -59,13 +59,15 @@ class OpenMediaFileSerializer(serializers.ModelSerializer):
                     for i in obj.thumbnail_set.all())
 
 
-class LocalMediaFileSerializer(OpenMediaFileSerializer):
+class LocalMediaFileSerializer(TaggitSerializer, OpenMediaFileSerializer):
 
     data = serializers.SerializerMethodField()
+    tags = TagListSerializerField()
 
     class Meta:
         model = models.MediaFile
-        fields = ['id', 'title', 'data', 'thumbnails']
+        fields = ['id', 'access', 'title',
+                  'data', 'thumbnails', 'tags', 'filename']
         read_only_fields = ['data']
 
     def get_data(self, obj):
@@ -132,4 +134,33 @@ class AlbumFileSerializer(serializers.ModelSerializer):
         new_order = validated_data.get('new_order', None)
         if new_order:
             instance.to(new_order)
+        return result
+
+
+class ThumbnailSerializer(serializers.ModelSerializer):
+    profile_name = serializers.CharField(required=False, write_only=True)
+
+    class Meta:
+        model = models.Thumbnail
+        # fields = ['id', 'album', 'mediafile', 'order']
+        exclude = ['profile']
+
+    def to_representation(self, obj):
+        res = super(ThumbnailSerializer, self).to_representation(obj)
+        res['profile_name'] = obj.profile.name
+        res['profile'] = obj.profile.id
+        return res
+
+    def create(self, validated_data):
+        profile_name = validated_data.pop('profile_name', None)
+        profile = profile_name and models.ThumbnailProfile.objects.filter(
+            name=profile_name).first()
+        if profile:
+            validated_data['profile'] = profile
+        result = super(ThumbnailSerializer, self).create(validated_data)
+        return result
+
+    def update(self, instance, validated_data):
+        profile_name = validated_data.pop('profile_name', None)
+        result = super(ThumbnailSerializer, self).update(instance, validated_data)
         return result

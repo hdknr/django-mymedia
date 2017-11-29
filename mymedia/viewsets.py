@@ -87,3 +87,11 @@ class AlbumFileViewSet(viewsets.ModelViewSet):
         order = self.request.data.get('order', 0)   # TODO: POST
         params = order and {'order': order} or {}
         serializer.save(**params)
+
+
+class ThumbnailViewSet(viewsets.ModelViewSet):
+
+    queryset = models.Thumbnail.objects.all()
+    serializer_class = serializers.ThumbnailSerializer
+    filter_class = filters.ThumbnailFilter
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
