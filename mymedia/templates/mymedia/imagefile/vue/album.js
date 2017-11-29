@@ -6,12 +6,26 @@ var AlbumComponent = Vue.extend({
   },
   data: function(){
     return {
-      current: null,
+      current_index: 0,
       drag: null, dragenter: null
     };
   },
   created(){
-      Vue.set(this, 'current', this.value.mediafiles[0]);
+      //Vue.set(this, 'current', this.value.mediafiles[0]);
+  },
+  watch:{
+      'value': function(updated){
+          if(this.value.id != updated.id){
+            console.log("value changed", this.current);
+          }
+      }
+  },
+  computed:{
+      'current': function(){
+        if (this.value.mediafiles.length > 0)
+          return this.value.mediafiles[this.current_index];
+        return null;
+      }
   },
   methods: {
      on_dragstart(mediafile,e) {this.drag = mediafile; },

@@ -21,7 +21,8 @@
 
                 <b-img width="120px"
                   class="rounded"
-                  @click="current = value.mediafiles[position]"
+                  {# @click="current = value.mediafiles[position]" #}
+                  @click="current_index = position"
                   class="media-move-handle"
                   style="padding-top: 5px" :src="media.data" >
                 </b-img>

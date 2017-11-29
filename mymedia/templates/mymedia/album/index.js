@@ -11,18 +11,20 @@ var app = new Vue({
     albums: []
   },
   created(){
-    var vm = this;
-    return axios.get(vm.endpoint).then((res) => {
-      try{
-        vm.response = res.data;
-        vm.albums = res.data.results;
-      }catch(e){
-      }
-    });
+    this.refreshData();
   },
   computed: {
   },
   methods:  {
+      refreshData(){
+        var vm = this;
+        return axios.get(vm.endpoint).then((res) => {
+          try{
+            Vue.set(vm, 'albums',res.data.results);
+          }catch(e){
+          }
+        });
+      },
       get_endpoint(album){
           if(album.id){
               return this.endpoint  + album.id + '/';
@@ -82,6 +84,7 @@ var app = new Vue({
       },
       addAlbum(){
           this.albums.splice(0, 0, {title: 'New', mediafiles:[]});
+          Vue.set(this, 'albums', Object.assign([], this.albums));
       },
       onShowUploader(image){
         if(image){
