@@ -21,13 +21,15 @@ var MediaFileComponent = Vue.extend({
       }
     },
     watch: {
-        mediafile: function(val){ this.reset(); }
+        mediafile: function(val){
+            Vue.nextTick(()=>{ this.reset();});
+        }
     },
     methods: {
-      setId(prefix, id){
-        return prefix + "-" + id;
-      },
       reset() {
+        if(!(this.nail in this.mediafile.thumbnails)){
+          Vue.set(this, 'nail', null);
+        }
         Vue.set(this, 'uploadingFile', null);
         Vue.set(this, 'isUploaderReady', false);
         this.$nextTick(()=> { Vue.set(this, 'isUploaderReady', true)});
