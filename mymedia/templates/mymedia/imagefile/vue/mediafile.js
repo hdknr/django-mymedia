@@ -27,7 +27,7 @@ var MediaFileComponent = Vue.extend({
     },
     methods: {
       reset() {
-        if(!(this.nail in this.mediafile.thumbnails)){
+        if(this.mediafile.thumbnails && !(this.nail in this.mediafile.thumbnails)){
           Vue.set(this, 'nail', null);
         }
         Vue.set(this, 'uploadingFile', null);
@@ -72,12 +72,14 @@ var MediaFileComponent = Vue.extend({
         if(this.nail){
           if(this.uploadingFile)
             this.uploadThumbnailFile().then((res) =>{
-              this.mediafile.thumbnails[this.nail] = res.data; });
+              vm.mediafile.thumbnails[this.nail] = res.data;
+              vm.reset();
+            });
         }else{
             this.uploadMediaFile().then((res) => {
               res.data.thumbnails = vm.mediafile.thumbnails;
               Vue.set(vm, 'mediafile', res.data);
-              this.$emit('on-mediafile-updated', res.data);
+              vm.$emit('on-mediafile-updated', res.data);
             });
         }
       }
