@@ -35,12 +35,8 @@ var app = new Vue({
           return prefix + "-" + value;
       },
       editTitle(album, index){
-        console.log("editing title")
         album.edit = true;
         this.$forceUpdate();
-        var r = this.getRef('edit-title', index)
-        console.log("ref key", r)
-        // this.$refs[r].focus();
       },
       saveTitle(album, index){
         album.edit = false;

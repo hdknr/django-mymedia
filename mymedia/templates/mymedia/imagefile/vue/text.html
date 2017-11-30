@@ -1,0 +1,19 @@
+<script type="text/x-template" id="imagefile-text-template">
+<div>
+  <span
+    @click="editing=true"
+    v-show="!editing">{[{ value }]}</span>
+
+  <b-form flud v-show="editing">
+    <b-input-group >
+      <b-form-input type="text"
+        required="true"
+        @change="editing=false; $emit('input', $event);"
+        v-model="value"></b-form-input>
+     <b-input-group-addon @click="editing=false">
+       <strong class="text-danger fa fa-times"></strong>
+     </b-input-group-addon>
+   </b-input-group>
+ </b-form>
+</div>
+</script>

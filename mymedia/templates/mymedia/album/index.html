@@ -80,6 +80,7 @@
 
 {% block mymedia_script %}
 {% get_csrftoken as token %}   {# CSRF TOKEN #}
+{% include 'mymedia/imagefile/vue/text.html' %}
 {% include 'mymedia/imagefile/vue/mediafile.html' %}
 {% include 'mymedia/imagefile/vue/dropload.html' %}
 {% include 'mymedia/imagefile/vue/gallery.html' %}
@@ -89,6 +90,7 @@
 <script>
 Vue.options.delimiters = ['{[{', '}]}'];        // Django テンプレートとバッティングしないように変更
 {% include 'mymedia/imagefile/vue/api.js' %}
+{% include 'mymedia/imagefile/vue/text.js' %}
 {% include 'mymedia/imagefile/vue/mediafile.js' %}
 {% include 'mymedia/imagefile/vue/dropload.js' %}
 {% include 'mymedia/imagefile/vue/gallery.js' %}

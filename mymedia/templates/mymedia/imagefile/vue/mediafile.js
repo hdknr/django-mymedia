@@ -1,6 +1,9 @@
 {% load staticfiles %}
 var MediaFileComponent = Vue.extend({
     props: ['value'], template: '#imagefile-mediafile-template',
+    components: {
+        'mymedia-text': TextComponent
+    },
     mixins: [apiMixin],
     data(){
         return{
@@ -52,23 +55,31 @@ var MediaFileComponent = Vue.extend({
           .map(x => {vm.uploadingFile = fileList[x];});
       },
       uploadMediaFile(){
+        console.log('update...', this.value);
         var formData = new FormData();
         if(this.uploadingFile){
           formData.append('data', this.uploadingFile, this.uploadingFile.name);
         }
-        formData.append('title', this.mediafile.title);
-        formData.append('filename', this.mediafile.filename);
-        formData.append('tags', JSON.stringify(this.mediafile.tags));
-        formData.append('access', this.mediafile.access);
-        return this.sendMediaFile(this.mediafile.id, formData);
+        formData.append('title', this.value.title);
+        //formData.append('filename', this.value.filename.toLowerCase());
+        formData.append('tags', JSON.stringify(this.value.tags));
+        formData.append('access', this.value.access);
+        return this.sendMediaFile(this.value.id, formData);
       },
       uploadThumbnailFile(){
-        var thumbnail = this.mediafile.thumbnails[this.nail];
+        var thumbnail = this.value.thumbnails[this.nail];
         var formData = new FormData();
         formData.append('data', this.uploadingFile, this.uploadingFile.name);
         formData.append('profile_name', this.nail);
-        formData.append('image', this.mediafile.id);
+        formData.append('image', this.value.id);
         return this.sendThumbnail(thumbnail.id, formData);
+      },
+      save(){
+        var vm = this;
+        this.uploadMediaFile().then((res) => {
+          res.data.thumbnails = vm.mediafile.thumbnails;
+          vm.$emit('on-mediafile-updated', res.data);
+        });
       },
       upload(){
         var vm = this;
@@ -79,10 +90,7 @@ var MediaFileComponent = Vue.extend({
               vm.reset();
             });
         }else{
-            this.uploadMediaFile().then((res) => {
-              res.data.thumbnails = vm.mediafile.thumbnails;
-              vm.$emit('on-mediafile-updated', res.data);
-            });
+            this.save();
         }
       }
     }

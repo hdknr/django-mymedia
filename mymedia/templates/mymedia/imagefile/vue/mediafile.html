@@ -45,17 +45,22 @@
 
 
           <b-list-group-item>
-            <h4 class="alert-heading"> {[{ mediafile.title  }]}</h4>
+            <h4 class="alert-heading">
+              <mymedia-text v-model="value.title"> </mymedia-text>
+            </h4>
           </b-list-group-item>
 
           <b-list-group-item>
-            ID={[{ mediafile.id }]} : {[{ mediafile.filename}]}
+            ID={[{ mediafile.id }]}: {[{ mediafile.filename}]}
           </b-list-group-item>
 
           <b-list-group-item>
             <span class="badge badge-pill badge-secondary" v-for="tag in mediafile.tags">{[{ tag }]}</span>
           </b-list-group-item>
 
+          <b-list-group-item>
+            <b-button size="sm" @click="save">Update</b-button>
+          </b-list-group-item>
 
 
         </b-list-group flush>
