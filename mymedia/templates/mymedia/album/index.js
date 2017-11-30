@@ -13,8 +13,6 @@ var app = new Vue({
   created(){
     this.refreshData();
   },
-  computed: {
-  },
   methods:  {
       refreshData(){
         var vm = this;

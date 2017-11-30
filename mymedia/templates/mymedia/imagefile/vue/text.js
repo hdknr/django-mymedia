@@ -3,8 +3,18 @@ var TextComponent = Vue.extend({
     data(){
         return{
             editing: false,
+            original: ''
         }
     },
     methods: {
+      updateText(ev){
+        if(ev.target.value && ev.target.value != this.original){
+          this.editing = false;
+          this.$emit('input', ev.target.value);
+        }
+        else{
+            this.value = this.orginal;
+        }
+      }
     }
 });

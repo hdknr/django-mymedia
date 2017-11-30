@@ -51,11 +51,11 @@
           </b-list-group-item>
 
           <b-list-group-item>
-            ID={[{ mediafile.id }]}: {[{ mediafile.filename}]}
+            ID={[{ value.id }]}: {[{ value.filename}]}
           </b-list-group-item>
 
           <b-list-group-item>
-            <span class="badge badge-pill badge-secondary" v-for="tag in mediafile.tags">{[{ tag }]}</span>
+            <mymedia-tags v-model="value.tags"> </mymedia-tags>
           </b-list-group-item>
 
           <b-list-group-item>

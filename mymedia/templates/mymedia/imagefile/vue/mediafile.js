@@ -2,7 +2,8 @@
 var MediaFileComponent = Vue.extend({
     props: ['value'], template: '#imagefile-mediafile-template',
     components: {
-        'mymedia-text': TextComponent
+        'mymedia-text': TextComponent,
+        'mymedia-tags': TagsComponent
     },
     mixins: [apiMixin],
     data(){
