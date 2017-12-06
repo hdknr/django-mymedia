@@ -40,6 +40,22 @@ class MediaFileSerializer(TaggitSerializer, serializers.ModelSerializer):
             result.set_new_name(instance.filename)
         return result
 
+    thumbnails = serializers.SerializerMethodField()
+
+    def get_thumbnails(self, obj):
+        request = self.context.get('request', None)
+
+        def _url(path):
+            return request and request.build_absolute_uri(path) or path
+
+        def _obj(thumbnail):
+            return dict(
+                id=thumbnail.id, data=_url(thumbnail.data.url),
+                profile_name=thumbnail.profile.name)
+
+        return dict((i.profile.name, _obj(i))
+                    for i in obj.thumbnail_set.all())
+
 
 class OpenMediaFileSerializer(serializers.ModelSerializer):
 

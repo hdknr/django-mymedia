@@ -27,6 +27,9 @@ var MediaFileComponent = Vue.extend({
         return this.mediafile.data;
       }
     },
+    created(){
+        console.log("meiafile created", this.value);
+    },
     watch: {
         mediafile: function(val){
             Vue.nextTick(()=>{ this.reset();});
@@ -79,6 +82,7 @@ var MediaFileComponent = Vue.extend({
         var vm = this;
         this.uploadMediaFile().then((res) => {
           res.data.thumbnails = vm.mediafile.thumbnails;
+          vm.$emit('input', this.value);
           vm.$emit('on-mediafile-updated', res.data);
         });
       },
