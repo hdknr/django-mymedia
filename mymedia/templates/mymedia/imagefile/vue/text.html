@@ -5,7 +5,13 @@
     v-show="!editing">{[{ value }]}</span>
 
   <b-form flud v-show="editing">
-    <b-input-group >
+
+    <b-form-textarea
+      @blur.native="updateText($event)"
+      :value="value" placeholder="Enter something" v-if="multiline==true">
+   </b-form-textarea>
+
+    <b-input-group v-else>
       <b-form-input type="text"
         required="true"
         @blur.native="updateText($event)"
@@ -14,6 +20,7 @@
        <strong class="text-danger fa fa-times"></strong>
      </b-input-group-addon>
    </b-input-group>
+
  </b-form>
 </div>
 </script>
