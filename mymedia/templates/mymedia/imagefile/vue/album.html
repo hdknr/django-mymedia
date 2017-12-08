@@ -1,8 +1,17 @@
 {% load bootstrap3 i18n %}
 <script type="text/x-template" id="mymedia-album-template">
   <b-container fluid  v-show="modalState">
+    <b-row >
+      <b-col cols="2"> </b-col>
+      <b-col cols="8"> </b-col>
+      <b-col cols="2" class="text-right">
+        <mymedia-toggle v-model="show_meta"> </mymedia-toggle>
+      </b-col>
+    </b-row>
+
     <b-row>
-      <b-col cols="8">
+      <b-col :cols="main_cols"  style="transition: .4s;">
+
           <b-row id="slide-container" v-if="value.mediafiles.length > 0">
 
             <b-col cols="2"
@@ -29,6 +38,13 @@
 
                 <span> {[{ media.title }]} </span>
             </b-col>
+
+            <b-col cols="2">
+              <b-button  variant="outline-primary" @click="$refs.gallery.$refs.dialog.show();"
+                style="width:100%; height:100%; margin:5px;">Add...</b-button>
+              <mymedia-gallery ref="gallery" @on-select="onImageSelected"></mymedia-gallery>
+            </b-col>
+
           </b-row>
 
           <b-row  id="slide-container" v-else>
@@ -36,7 +52,7 @@
           </b-row>
       </b-col>
 
-      <b-col cols="4" class="pl-2" v-if="value.id">
+      <b-col :cols="meta_cols" class="pl-2" v-if="show_meta"  style="transition: .4s;">
           <mymedia-mediafile
             @on-mediafile-updated="replaceCurrentMediaFile"
             v-model="value.current"></mymedia-mediafile>
