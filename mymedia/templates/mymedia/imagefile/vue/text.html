@@ -1,8 +1,12 @@
 <script type="text/x-template" id="imagefile-text-template">
 <div>
-  <span
+
+  <div
     @click="orginal=value; editing=true"
-    v-show="!editing">{[{ value }]}</span>
+    v-show="!editing">
+    <span v-if="value">{[{ value }]}</span>
+    <span v-else>Click to Edit</span>
+  </div>
 
   <b-form flud v-show="editing">
 
@@ -12,13 +16,12 @@
    </b-form-textarea>
 
     <b-input-group v-else>
-      <b-form-input type="text"
-        required="true"
+      <b-form-input type="text" required="true"
         @blur.native="updateText($event)"
         :value="value"></b-form-input>
-     <b-input-group-addon @click="editing=false">
-       <strong class="text-danger fa fa-times"></strong>
-     </b-input-group-addon>
+       <b-input-group-addon @click="editing=false">
+         <strong class="text-danger far fa-times-circle"></strong>
+       </b-input-group-addon>
    </b-input-group>
 
  </b-form>

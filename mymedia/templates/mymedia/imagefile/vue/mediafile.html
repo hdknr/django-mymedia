@@ -1,5 +1,5 @@
 <script type="text/x-template" id="imagefile-mediafile-template">
-<b-container fluid>
+<b-container fluid >
 
     <b-row>
       <b-col class="mediafile-view p-1 border border-primary">
@@ -35,11 +35,12 @@
                   :variant="switchVariant(null)"
                   @click="setCurrentImage(null)">画像</b-btn>
                </b-button-group>
-               <b-button-group class="mx-1" size="sm">
+               <b-button-group class="mx-1" size="sm" v-if="mediafile.thumbnails">
                  <b-btn
                     :variant="switchVariant(name)"
                     @click="setCurrentImage(name)"
                     v-for="(data, name, index) in mediafile.thumbnails">{[{ name }]}</b-btn>
+                </b-button-group>
              </b-button-toolbar>
           </b-list-group-item>
 

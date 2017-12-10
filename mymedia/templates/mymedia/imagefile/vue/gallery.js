@@ -37,11 +37,6 @@ var Gallery = Vue.extend({
       onMediafileUpload(mediafile){
         this.$emit('on-select', mediafile, true);
       },
-      onEditImage(image, evt){
-        console.log("onEditImage......");
-        //this.hideGate = true;
-        // this.$emit('on-upload', image);
-      },
       getPageUrl(page){
         if (page == null || page == undefined)
           page = this.response.current_page == undefined ? 1: this.response.current_page + 1;

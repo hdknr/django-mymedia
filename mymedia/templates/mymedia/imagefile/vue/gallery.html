@@ -8,7 +8,7 @@
     <b-container fluid class="p-4 bg-dark" style="overflow-x:scroll;white-space: nowrap;" @scroll="onScrolled">
         <b-col v-for="(i, index) in images">
           <b-img thumbnail :id="setId('thumb', i.id)" fluid
-            :src="i.data" alt="Thumbnail" width="100" @click="onEditImage(i)"></b-img>
+            :src="i.data" alt="Thumbnail" width="100"></b-img>
 
           <br>
 

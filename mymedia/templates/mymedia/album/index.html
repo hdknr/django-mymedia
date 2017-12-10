@@ -49,7 +49,8 @@
 
       <b-card-body>
           <mymedia-album
-            :modal-state="true" v-model="album">
+            @input="v => {album = v; updateAlbum(album);}"
+            :modal-state="true" :value="album">
           </mymedia-album>
       </b-card-body>
 
@@ -67,10 +68,7 @@
 
 {% block style %}{{ block.super }}
 <style>
-
-{% include 'mymedia/imagefile/vue/gallery.css' %}
-{% include 'mymedia/imagefile/vue/mediafile.css' %}
-
+{% include 'mymedia/imagefile/vue/mymedia.css' %}
 </style>
 
 <style lang="scss">
@@ -79,24 +77,12 @@
 {% endblock %}
 
 {% block mymedia_script %}
-{% get_csrftoken as token %}   {# CSRF TOKEN #}
-{% include 'mymedia/imagefile/vue/text.html' %}
-{% include 'mymedia/imagefile/vue/tags.html' %}
-{% include 'mymedia/imagefile/vue/mediafile.html' %}
-{% include 'mymedia/imagefile/vue/dropload.html' %}
-{% include 'mymedia/imagefile/vue/gallery.html' %}
-{% include 'mymedia/imagefile/vue/album.html' %}
+{% include 'mymedia/imagefile/vue/mymedia.html' %}
 
 
 <script>
 Vue.options.delimiters = ['{[{', '}]}'];        // Django テンプレートとバッティングしないように変更
-{% include 'mymedia/imagefile/vue/api.js' %}
-{% include 'mymedia/imagefile/vue/text.js' %}
-{% include 'mymedia/imagefile/vue/tags.js' %}
-{% include 'mymedia/imagefile/vue/mediafile.js' %}
-{% include 'mymedia/imagefile/vue/dropload.js' %}
-{% include 'mymedia/imagefile/vue/gallery.js' %}
-{% include 'mymedia/imagefile/vue/album.js' %}
+{% include 'mymedia/imagefile/vue/mymedia.js' %}
 {% include 'mymedia/album/index.js' %}
 </script>
 {% endblock %}

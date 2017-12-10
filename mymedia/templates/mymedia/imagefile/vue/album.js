@@ -12,6 +12,11 @@ var AlbumComponent = Vue.extend({
       drag: null, dragenter: null
     };
   },
+  watch:{
+      value: function(newValue, oldValue){
+          console.log("newvalue", newValue.mediafiles.length)
+      }
+  },
   computed:{
     main_cols(){return this.show_meta ? 8: 12;},
     meta_cols(){return this.show_meta ? 4: 0;},
@@ -20,31 +25,39 @@ var AlbumComponent = Vue.extend({
       this.value.current = this.value.mediafiles[0];
   },
   methods: {
-     on_dragstart(mediafile,e) {this.value.drag = mediafile; },
-     on_dragenter(mediafile, e){this.value.dragenter = mediafile; },
+     on_dragstart(position,e) {this.drag = position;},
+     on_dragenter(position, e){this.dragenter = position; },
      on_drop(e) {
         this.value.mediafiles.splice(
-          this.value.dragenter, 0,
-          this.value.mediafiles.splice(this.value.drag, 1)[0]);
+          this.dragenter, 0,
+          this.value.mediafiles.splice(this.drag, 1)[0]);
         this.$emit('input', this.value); },
 
      selectFile(index){
-        this.value.current = this.value.mediafiles[index];
-        this.$forceUpdate(); },
+        Vue.set(this.value, 'current', this.value.mediafiles[index]);
+        this.$forceUpdate();      // to make highlight the selected one
+      },
 
      removeFile(index){
        this.value.mediafiles.splice(index, 1);
-      this.$emit('input', this.value); },
+       if(this.value.mediafiles.length < 1)
+          Vue.set(this.value, 'current', null);
+       this.$emit('input', this.value);
+     },
 
      addFiles(mediafiles){
-      var arr = this.value.mediafiles.concat(mediafiles);
-      this.value.mediafiles = arr;
-      this.$emit('input', this.value); },
+      Array.prototype.push.apply(
+        this.value.mediafiles, mediafiles);
+      this.$emit('input', this.value);
+      this.$forceUpdate();      // to make highlight the selected one
+      },
 
       onImageSelected(mediafile, selected){
         if(selected == true){
-            this.value.mediafiles = this.value.mediafiles.concat([mediafile]);
-            this.$emit('input', this.value); }
+          this.value.mediafiles.push(mediafile);
+          this.$emit('input', this.value);
+          this.$forceUpdate();      // to make highlight the selected one
+        }
       },
 
      replaceCurrentMediaFile(item){

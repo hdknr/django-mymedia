@@ -50,7 +50,7 @@ class ThumbnailProfile(object):
 
         if thumbnail and thumbnail.data and not force:
             return thumbnail
-        
+
         image_format = media.media_type.content_type.split('/')[1]
         resized = images.resize_image(
             media.data, image_format, self.width, self.height)
@@ -67,7 +67,6 @@ class ThumbnailProfile(object):
 
 class Album(object):
     def update_files(self, file_list):
-        print(file_list)
         dels = set(i.id for i in self.files.all()) - set(file_list)
         self.albumfile_set.filter(mediafile_id__in=list(dels)).delete()
         for i in file_list:
