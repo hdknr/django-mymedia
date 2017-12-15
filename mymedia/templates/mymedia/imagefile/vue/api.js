@@ -1,5 +1,16 @@
 var apiMixin = {
   methods: {
+    getEndpoint(base_url, instance){
+      return (instance.id) ? base_url+ instance.id + '/' : base_url;
+    },
+    sendObject(base_url, instance){
+      var endpoint = this.getEndpoint(base_url, instance);
+      var config = {};
+      axios.defaults.xsrfCookieName = 'csrftoken';
+      axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+      var method = instance.id ? 'patch': 'post';
+      return axios[method](endpoint, instance, config);
+    },
     sendForm(endpoint, method, formData){
         var config = {headers: {'content-type': 'multipart/form-data'}};
         axios.defaults.xsrfCookieName = 'csrftoken';

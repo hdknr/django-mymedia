@@ -1,6 +1,7 @@
 var AlbumComponent = Vue.extend({
   template: '#mymedia-album-template',
-  props: ['value', 'modalState'],     {# value is bound to Album instance #}
+  props: ['value', 'instanceId', 'modalState'],     {# value is bound to Album instance #}
+  mixins: [apiMixin],
   components: {
     'mymedia-gallery': Gallery,
     'mymedia-toggle': ToggleComponent,
@@ -8,23 +9,23 @@ var AlbumComponent = Vue.extend({
   },
   data: function(){
     return {
+      base_url: "{% url 'mymedia_api:album-list' %}",
       show_meta: false,
       drag: null, dragenter: null
     };
-  },
-  watch:{
-      value: function(newValue, oldValue){
-          console.log("newvalue", newValue.mediafiles.length)
-      }
   },
   computed:{
     main_cols(){return this.show_meta ? 8: 12;},
     meta_cols(){return this.show_meta ? 4: 0;},
   },
   created(){
-      this.value.current = this.value.mediafiles[0];
+      if(this.value.mediafiles)
+        this.value.current = this.value.mediafiles[0];
   },
   methods: {
+     update(){
+        return this.sendObject(this.base_url, this.value);
+     },
      on_dragstart(position,e) {this.drag = position;},
      on_dragenter(position, e){this.dragenter = position; },
      on_drop(e) {

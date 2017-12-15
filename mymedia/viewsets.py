@@ -65,9 +65,6 @@ class AlbumViewSet(viewsets.ModelViewSet):
             return self.request.user.album_set.all()
         return models.Album.objects.all()
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
 
 class AlbumFileViewSet(viewsets.ModelViewSet):
     queryset = models.AlbumFile.objects.all()

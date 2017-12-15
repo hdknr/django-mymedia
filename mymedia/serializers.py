@@ -114,15 +114,14 @@ class AlbumSerializer(serializers.ModelSerializer):
             for i in obj.albumfile_set.all()]
         return res
 
-    def update(self, instance, validated_data):
-        mediafiles = validated_data.pop('mediafiles', [])
-        result = super(AlbumSerializer, self).update(instance, validated_data)
-        instance.update_files([i['id'] for i in mediafiles])
-        return result
+    def save(self, **kwargs):
+        owner = kwargs.get('owner', None)
+        if not owner:
+            request = self.context.get('request', None)
+            kwargs['owner'] = request and request.user
 
-    def create(self, validated_data):
-        mediafiles = validated_data.pop('mediafiles', [])
-        instance = super(AlbumSerializer, self).create(validated_data)
+        mediafiles = self.validated_data.pop('mediafiles', [])
+        instance = super(AlbumSerializer, self).save(**kwargs)
         instance.update_files([i['id'] for i in mediafiles])
         return instance
 
