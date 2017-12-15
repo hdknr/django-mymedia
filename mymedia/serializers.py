@@ -29,7 +29,6 @@ class MediaFileSerializer(TaggitSerializer, serializers.ModelSerializer):
             data.name = filename
         return super(MediaFileSerializer, self).create(validated_data)
 
-
     def update(self, instance, validated_data):
         new_filename = validated_data.get('filename', instance.filename)
         new_access = validated_data.get('access', instance.access)
@@ -55,6 +54,23 @@ class MediaFileSerializer(TaggitSerializer, serializers.ModelSerializer):
 
         return dict((i.profile.name, _obj(i))
                     for i in obj.thumbnail_set.all())
+
+
+class MediaFileSerializerReadOnly(MediaFileSerializer):
+
+    class Meta:
+        model = models.MediaFile
+        fields = '__all__'
+        read_only_fields = ('owner', 'data', 'filename')
+
+    def is_valid(self):
+        res = super(MediaFileSerializerReadOnly, self).is_valid()
+        return True
+
+    def save(self, **kwargs):
+        # No save , Return existing instance
+        return self.Meta.model.objects.filter(
+            id=self.initial_data.get('id', 0)).first()
 
 
 class OpenMediaFileSerializer(serializers.ModelSerializer):

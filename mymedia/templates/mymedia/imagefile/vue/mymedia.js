@@ -6,3 +6,4 @@
 {% include 'mymedia/imagefile/vue/dropload.js' %}
 {% include 'mymedia/imagefile/vue/gallery.js' %}
 {% include 'mymedia/imagefile/vue/album.js' %}
+{% include 'mymedia/imagefile/vue/image.js' %}

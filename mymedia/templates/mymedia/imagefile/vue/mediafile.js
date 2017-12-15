@@ -59,7 +59,6 @@ var MediaFileComponent = Vue.extend({
           .map(x => {vm.uploadingFile = fileList[x];});
       },
       uploadMediaFile(){
-        console.log('update...', this.value);
         var formData = new FormData();
         if(this.uploadingFile){
           formData.append('data', this.uploadingFile, this.uploadingFile.name);
