@@ -16,14 +16,8 @@ build
 dist
 
 # django projects
-static
-media
-components
 docs/build
-logs
-archives
 node_modules
-app/local_settings.py
 
 # mac
 .DS_Store
