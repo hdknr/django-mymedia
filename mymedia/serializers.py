@@ -56,6 +56,21 @@ class MediaFileSerializer(TaggitSerializer, serializers.ModelSerializer):
                     for i in obj.thumbnail_set.all())
 
 
+class NestedModelField(serializers.Field):
+
+    def __init__(self, serializer_class, keys=['id'], **kwargs):
+        self.serializer_class = serializer_class
+        self.keys = keys
+        super(NestedModelField, self).__init__(**kwargs)
+
+    def to_representation(self, obj):
+        return self.serializer_class(obj).data
+
+    def to_internal_value(self, data):
+        q = dict((key, data.get(key, '')) for key in self.keys)
+        return self.serializer_class.Meta.model.objects.filter(**q).first()
+
+
 class MediaFileSerializerReadOnly(MediaFileSerializer):
 
     class Meta:
@@ -71,6 +86,7 @@ class MediaFileSerializerReadOnly(MediaFileSerializer):
         # No save , Return existing instance
         return self.Meta.model.objects.filter(
             id=self.initial_data.get('id', 0)).first()
+
 
 
 class OpenMediaFileSerializer(serializers.ModelSerializer):
