@@ -1,11 +1,9 @@
 <template>
-  <b-row v-if="value" no-gutters="true">
-
+  <b-row>
     <b-col cols="12">
+
       <b-row>
-        <b-col cols="10">
-        </b-col>
-        <b-col cols="2" class="text-right">
+        <b-col cols="2" offset="10" class="text-right">
           <mymedia-toggle v-model="show_meta"> </mymedia-toggle>
         </b-col>
       </b-row>
@@ -15,7 +13,7 @@
           <div class="mx-1">
 
             <b-img fluid class="rounded" style="padding-top: 5px"
-              @click="$refs.gallery.$refs.dialog.show()" :src="value.data" v-if="value.data">
+              v-if="hasImage" @click="$refs.gallery.$refs.dialog.show()" :src="value.data">
             </b-img>
             <b-button v-else @click="$refs.gallery.$refs.dialog.show()">Select Image</b-button>
 
@@ -24,7 +22,7 @@
         </b-col>
 
         <b-col :cols="meta_cols" v-if="show_meta" style="transition: .4s; ">
-          <mymedia-mediafile v-model="value"></mymedia-mediafile>
+          <mymedia-mediafile v-model="value" v-if="hasImage"></mymedia-mediafile>
         </b-col>
       </b-row>
 
@@ -50,6 +48,7 @@ export default {
     return {show_meta: false};
   },
   computed:{
+      hasImage(){  return this.value && this.value.data; },
       main_cols(){ return this.show_meta ?  8: 12; },
       meta_cols(){ return this.show_meta ?  4: 0; },
   },

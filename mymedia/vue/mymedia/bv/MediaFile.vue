@@ -3,20 +3,22 @@
 
     <b-row>
       <b-col class="mediafile-view p-1 border border-primary">
-        <b-img fluid :src="image_url"></b-img>
+        <div v-if="Boolean(value.data)">
+          <b-img fluid :src="image_url"></b-img>
 
-        <input type="file" name="uploadingFile"
-          ref="uploadingFile"
-          v-if="isUploaderReady"
-          :disabled="isSaving"
-          @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
-          accept="image/*">
-        </input>
+          <input type="file" name="uploadingFile"
+            ref="uploadingFile"
+            v-if="isUploaderReady"
+            :disabled="isSaving"
+            @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
+            accept="image/*">
+          </input>
+        </div>
       </b-col>
     </b-row>
 
     <b-row class="pt-1">
-      <b-col cols="12">
+      <b-col cols="12" v-if="Boolean(value.data)">
 
         <b-list-group flush>
 
@@ -122,9 +124,11 @@ export default {
           return 'url("' + this.image_url + '")'
       },
       image_url(){
-        if(this.nail && this.nail in this.mediafile.thumbnails )
-          return this.mediafile.thumbnails[this.nail].data;
-        return this.mediafile.data;
+        if(Boolean(this.value.data)) {
+          if(this.nail && this.nail in this.mediafile.thumbnails )
+            return this.mediafile.thumbnails[this.nail].data;
+          return this.mediafile.data;
+        }
       }
     },
     watch: {
