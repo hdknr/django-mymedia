@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from taggit_serializer.serializers import (
     TaggitSerializer, TagListSerializerField)
+from mytaggit.serializers import TagManagerSerializerField
 from . import models
 
 
@@ -13,14 +14,19 @@ class MediaTypeSerializer(serializers.ModelSerializer):
 
 
 class MediaFileSerializer(TaggitSerializer, serializers.ModelSerializer):
-
     media_type = MediaTypeSerializer(many=False, read_only=True)
-    tags = TagListSerializerField()
+    tags = TagManagerSerializerField()
 
     class Meta:
         model = models.MediaFile
         fields = '__all__'
         read_only_fields = ('owner', )
+
+    def save(self, **kwargs):
+        tags = self.validated_data.pop('tags', [])
+        super(MediaFileSerializer, self).save(**kwargs)
+        self.instance.tags.clear()
+        self.instance.tags.add(*tags)
 
     def create(self, validated_data):
         data = validated_data.get('data', None)
@@ -115,7 +121,7 @@ class OpenMediaFileSerializer(serializers.ModelSerializer):
 class LocalMediaFileSerializer(TaggitSerializer, OpenMediaFileSerializer):
 
     data = serializers.SerializerMethodField()
-    tags = TagListSerializerField()
+    tags = TagManagerSerializerField()
 
     class Meta:
         model = models.MediaFile
@@ -128,6 +134,12 @@ class LocalMediaFileSerializer(TaggitSerializer, OpenMediaFileSerializer):
         def _url(path):
             return request and request.build_absolute_uri(path) or path
         return _url(obj.data.url)
+
+    def save(self, **kwargs):
+        tags = self.validated_data.pop('tags', [])
+        super(LocalMediaFileSerializer, self).save(**kwargs)
+        self.instance.tags.clear()
+        self.instance.tags.add(*tags)
 
 
 class AlbumSerializer(serializers.ModelSerializer):
