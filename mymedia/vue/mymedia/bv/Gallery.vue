@@ -103,11 +103,13 @@ export default {
         if(url == null || url == undefined) return;
         var vm  = this;
         return axios.get(url).then((res) =>{
+          vm.response = res.data;
+          if(res.data.results) {
             res.data.results.forEach(function(val){
               val.selected =  val.id in vm.selected_list;
             });
-            vm.response = res.data;
-            vm.images = vm.images.concat(vm.response.results)
+            Vue.set(vm, 'images', vm.images.concat(vm.response.results));
+          }
         });
       },
       onScrolled(ev){
