@@ -165,9 +165,9 @@ export default {
           formData.append('data', this.uploadingFile, this.uploadingFile.name);
         }
         formData.append('title', this.value.title);
-        formData.append('tags', JSON.stringify(this.value.tags));
+        formData.append('tags', this.value.tags);
         formData.append('access', this.value.access);
-        return this.$root.upload('imagefile', formData, this.value);
+        return this.$root.upload('imagefile-list', formData, this.value);
       },
 
       uploadThumbnailFile(){
@@ -176,7 +176,7 @@ export default {
         formData.append('data', this.uploadingFile, this.uploadingFile.name);
         formData.append('profile_name', this.nail);
         formData.append('image', this.value.id);
-        return this.$root.upload('thumbnail', formData, thumbnail);
+        return this.$root.upload('thumbnail-list', formData, thumbnail);
       },
 
       save(){
