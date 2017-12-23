@@ -4,7 +4,7 @@
     <b-button size="sm"
         @click="popTag(tag)" :key="tag.id"
         variant="secondary" v-for="tag in value"
-        style="border-radius: 15px;margin: 3px">{{ tag }}</b-button>
+        style="border-radius: 15px;margin: 3px">{{ tag.name }}</b-button>
 
     <b-button size="sm" variant="outline-secondary"
       style="border-radius: 15px;margin: 3px"
@@ -47,7 +47,7 @@ export default {
       },
       addTag(ev){
         if(!this.value) this.value = [];
-        this.value.push(ev.target.value);
+        this.value.push({name: ev.target.value});
         this.editing=false;
         ev.target.value = '';
         this.$emit('input', this.value);
