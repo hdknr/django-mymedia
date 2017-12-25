@@ -15,7 +15,7 @@
 
             <b-col cols="2"
                 :class="{'border-danger': value.current==media, 'border': value.current==media}"
-                v-for="(media, position) in value.mediafiles"
+                v-for="(media, position) in all_mediafiles"
                 :key="media.id"
                 @dragstart="on_dragstart(position, $event)"
                 @dragenter="on_dragenter(position, $event)"
@@ -33,7 +33,7 @@
                   style="padding-top: 5px" :src="media.data" >
                 </b-img>
 
-                <span> {[{ position }]}.{[{ media.title }]}
+                <span> {{ position }}.{{ media.title }}
                 </span>
             </b-col>
 
@@ -74,12 +74,20 @@ export default {
     };
   },
   computed:{
+
+    all_mediafiles(){
+      try{
+        return this.value.mediafiles;
+      }catch(e){ return [];}
+    },
     main_cols(){return this.show_meta ? 8: 12;},
     meta_cols(){return this.show_meta ? 4: 0;},
   },
   created(){
-      if(this.value.mediafiles)
+    try{
+      if(this.value && this.value.mediafiles)
         this.value.current = this.value.mediafiles[0];
+    }catch(e){}
   },
   methods: {
      update(){
