@@ -62,7 +62,7 @@ export default {
     },
     computed: {
        endpoint(){
-          return this.$root.env.endpoint['imagefile'];
+          return this.$root.env.endpoint['imagefile-list'];
        }
     },
     methods: {
