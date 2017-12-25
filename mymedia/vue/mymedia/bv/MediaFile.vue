@@ -165,7 +165,7 @@ export default {
           formData.append('data', this.uploadingFile, this.uploadingFile.name);
         }
         formData.append('title', this.value.title);
-        formData.append('tags', this.value.tags);
+        formData.append('tags', JSON.stringify(this.value.tags));
         formData.append('access', this.value.access);
         return this.$root.upload('imagefile-list', formData, this.value);
       },
