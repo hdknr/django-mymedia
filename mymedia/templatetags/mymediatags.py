@@ -14,7 +14,7 @@ def mediafile_form():
 
 @register.filter
 def thumbnail_url(media, profile='default'):
-    t = media.thumbnail_for(profile)
+    t = media and media.thumbnail_for(profile)
     return t and t.data.url
 
 
