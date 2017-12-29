@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import Gallery from './Gallery.vue'
 import Toggle from './Toggle.vue'
 import MediaFile from './MediaFile.vue'

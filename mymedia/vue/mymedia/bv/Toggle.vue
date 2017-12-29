@@ -65,6 +65,8 @@ input:checked + .slider:before {
 </style>
 
 <script>
+import Vue from 'vue'
+
 export default {
   props: ['value'],
   created(){

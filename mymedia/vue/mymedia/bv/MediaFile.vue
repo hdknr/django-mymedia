@@ -102,6 +102,7 @@
 </style>
 
 <script>
+import Vue from 'vue'
 import Text from 'mymedia/bv/Text'
 import Tags from 'mymedia/bv/Tags'
 

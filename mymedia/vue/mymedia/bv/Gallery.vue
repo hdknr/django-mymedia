@@ -41,6 +41,7 @@
 
 
 <script>
+import Vue from 'vue'
 import Dropload from 'mymedia/bv/Dropload.vue';
 
 export default {
