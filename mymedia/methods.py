@@ -52,8 +52,8 @@ class ThumbnailProfile(object):
             return thumbnail
 
         image_format = media.media_type.content_type.split('/')[1]
-        resized = images.resize_image(
-            media.data, image_format, self.width, self.height)
+
+        resized = images.fit_and_crop_rect(media.data, self.width, self.height)
         resized.name = os.path.basename(media.data.name)
 
         if thumbnail:

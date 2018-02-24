@@ -2,8 +2,7 @@
   <b-container fluid class="dropbox">
     <b-form-file class="input-file"
       multiple :name="uploadFieldName" :disabled="isSaving"
-      @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
-      accept="image/*">
+      @change="onChanged($event)" accept="image/*">
    </b-form-file>
     <p v-if="isInitial"> Drag your file(s) here to begin<br> or click to browse </p>
     <p v-if="isSaving"> Uploading {{ fileCount }} files... </p>
@@ -88,9 +87,18 @@ export default {
           this.currentStatus = STATUS_FAILED;
         });
     },
+    onChanged(ev){
+      //@change="filesChange($event.target.name, $event.target.files);
+      // fileCount = $event.target.files.length"
+        this.filesChange(event.target.name, event.target.files);
+    },
     filesChange(fieldName, fileList) {
       if (!fileList.length) return;
-      var vm = this;
+      for(var i in fileList){
+          var item = fileList[i];
+          console.log(item);
+      }
+
       Array
         .from(Array(fileList.length).keys())
         .map(x => {
