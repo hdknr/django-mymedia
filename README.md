@@ -1,5 +1,6 @@
 # django-mymedia
 
+- For Django 2.x
 - protected media file management
 
 
