@@ -1,4 +1,3 @@
-# coding: utf-8
 from django.utils.deconstruct import deconstructible
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
@@ -52,7 +51,7 @@ class ModelFieldPath(object):
         return unquote(ret)
 
     @classmethod
-    def get_protected_data(cls, name, user, action='download'):
+    def get_protected_data(cls, name):
         m = re.search(
             r'^(?P<access>[^/]+)/(?P<app_label>[^/]+)/(?P<model_name>[^/]+)/(?P<field_name>[^/]+)/(?P<path>.+)',    # NOQA
             name)
@@ -62,6 +61,4 @@ class ModelFieldPath(object):
         model_class = ct and ct.model_class()
         query = Q(**{field_name: path}) | Q(**{field_name: name})
         instance = model_class.objects.filter(query).first()
-        perm = get_permission_codename(action, model_class._meta)
-        # TODO: cache for S3 storage
-        return user.has_perm(perm, instance) and getattr(instance, field_name)
+        return instance and (instance, field_name) or (None, None)   # NOQA

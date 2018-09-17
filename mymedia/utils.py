@@ -1,8 +1,11 @@
-# coding: utf-8
 from django.template.loader import get_template
 from django.template.library import SimpleNode
 from django.template.loader_tags import BlockNode, ExtendsNode
 from mytaggit.utils import Kakasi
+
+
+def download_permcode(model_instnace, field_name):
+    return f"{model_instnace._meta.app_label}.download_{field_name}_{model_instnace._meta.model}"
 
 
 def slugify(name):

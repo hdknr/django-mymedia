@@ -1,4 +1,3 @@
-# coding: utf-8
 '''
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'mymedia.exceptions.exception_handler'

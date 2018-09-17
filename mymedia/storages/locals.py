@@ -1,4 +1,3 @@
-# coding: utf-8
 from django.core.files.storage import FileSystemStorage
 from django.core.files.move import file_move_safe
 from django.conf import settings
