@@ -1,4 +1,3 @@
-# coding: utf-8
 from django.conf import settings
 
 # from storages.backends.s3boto import S3BotoStorage
@@ -28,7 +27,7 @@ class MediaStorage(S3Boto3Storage, ProtecteionMixin):
                 self.move(name, name + ".bak")
 
         return super(MediaStorage, self).get_available_name(
-            name, max_length=max_length
+            name, max_length=max_length)
 
     def move(self, src_name, to_name):
         # TODO:

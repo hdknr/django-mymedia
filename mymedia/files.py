@@ -16,7 +16,7 @@ logger = getLogger()
 @deconstructible
 class ModelFieldPath(object):
     '''
-    photo = models.ImageField(upload_to=MediaFieldPath('photo')..)
+    photo = models.ImageField(upload_to=ModelFieldPath('photo')..)
     '''
 
     def __init__(self, fieldname, access='protected'):
@@ -37,7 +37,7 @@ class ModelFieldPath(object):
         n = now()
         id = instance.id or "t{:x}".format(int(n.strftime('%H%M%S')))
         prefix = n.strftime("%Y/%m%d")
-        return u"{}/{}.{}".format(prefix, id, filename)
+        return u"{}/{}/{}".format(prefix, id, filename)
 
     @classmethod
     def get_base_url(cls, access, app_label, model_name, field_name):

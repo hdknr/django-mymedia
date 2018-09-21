@@ -1,3 +1,16 @@
+'''
+settings.py:
+
+~~~py
+DEFAULT_FILE_STORAGE = 'mymedia.storages.locals.MediaStorage'
+STATICFILES_STORAGE = 'mymedia.storages.locals.StaticStorage'
+~~~
+
+~~~py
+MYMEDIA_OVERWRITE = 'delete'
+~~~
+'''
+
 from django.core.files.storage import FileSystemStorage
 from django.core.files.move import file_move_safe
 from django.conf import settings
