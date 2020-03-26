@@ -1,8 +1,17 @@
+import django
+
+if django.VERSION < (3, 0):
+    from django.utils.six.moves.urllib.parse import unquote 
+else:
+    from urllib.parse import unquote
+
 from django.template.loader import get_template
 from django.template.library import SimpleNode
 from django.template.loader_tags import BlockNode, ExtendsNode
 from mytaggit.utils import Kakasi
 
+
+unquote_path = unquote
 
 def download_permcode(model_instnace, field_name):
     return f"{model_instnace._meta.app_label}.download_{field_name}_{model_instnace._meta.model}"

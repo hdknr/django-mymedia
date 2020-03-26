@@ -2,12 +2,11 @@ from django.utils.deconstruct import deconstructible
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_permission_codename
-from django.utils.six.moves.urllib.parse import unquote
 from django.utils.timezone import now
 import traceback
 import re
 import os
-from .utils import slugify
+from .utils import slugify, unquote
 
 from logging import getLogger
 logger = getLogger()
